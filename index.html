@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>RentApp Frontend</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <h1>RentApp</h1>
+
+  <div id="auth" class="section">
+    <div class="row">
+      <div class="col">
+        <h2>Register</h2>
+        <input type="text" id="registerName" placeholder="Name">
+        <input type="text" id="registerLastName" placeholder="Last Name">
+        <input type="email" id="registerEmail" placeholder="Email">
+        <input type="password" id="registerPassword" placeholder="Password">
+        <select id="registerRole">
+          <option value="CLIENT">Client</option>
+          <option value="ADMIN">Admin</option>
+        </select>
+        <button onclick="handleRegister()">Register</button>
+      </div>
+
+      <div class="col">
+        <h2>Login</h2>
+        <input type="text" id="loginEmail" placeholder="Email">
+        <input type="password" id="loginPassword" placeholder="Password">
+        <button onclick="handleLogin()">Login</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="main" class="hidden">
+    <div class="section">
+      <button onclick="logout()" class="danger">Logout</button>
+    </div>
+
+    <div class="section">
+      <h2>Mașini</h2>
+      <button onclick="loadMasini()">Afișează mașini</button>
+      <ul id="masinaList"></ul>
+
+      <h3>Adaugă mașină (doar admin)</h3>
+      <input type="text" id="numeMasina" placeholder="Nume">
+      <input type="text" id="tipMasina" placeholder="Tip">
+      <input type="number" id="pretMasina" placeholder="Preț">
+      <button onclick="handleCreateMasina()">Adaugă</button>
+    </div>
+
+    <div class="section">
+      <h2>Locații</h2>
+      <button onclick="loadLocatii()">Afișează locații</button>
+      <ul id="locatieList"></ul>
+
+      <h3>Adaugă locație (doar admin)</h3>
+      <input type="text" id="numeLocatie" placeholder="Nume">
+      <input type="text" id="adresaLocatie" placeholder="Adresa">
+      <button onclick="handleCreateLocatie()">Adaugă</button>
+    </div>
+
+    <div class="section">
+      <h2>Închirieri</h2>
+      <button onclick="loadInchirieri()">Afișează închirieri</button>
+      <ul id="inchirieriList"></ul>
+
+      <h3>Închiriază mașină</h3>
+      <button onclick="loadMasiniPentruInchiriere()">Încarcă mașini</button>
+      <select id="masinaInchiriereSelect"></select>
+      <select id="locatieInchiriereSelect"></select>
+      <input type="date" id="dataInchiriere">
+      <button onclick="inchiriazaMasina()">Închiriază</button>
+    </div>
+
+    <div class="section">
+      <h2>Reviews</h2>
+      <button onclick="loadReviews()">Afișează reviews</button>
+      <ul id="reviewsList"></ul>
+
+      <h3>Adaugă review</h3>
+      <select id="inchiriereReviewSelect"></select>
+      <select id="reviewRating">
+        <option value="1">1 ⭐</option>
+        <option value="2">2 ⭐</option>
+        <option value="3">3 ⭐</option>
+        <option value="4">4 ⭐</option>
+        <option value="5">5 ⭐</option>
+      </select>
+      <textarea id="reviewComentariu" placeholder="Comentariu"></textarea>
+      <button onclick="adaugaReview()">Adaugă review</button>
+    </div>
+  </div>
+
+  <script type="module" src="js/appState.js"></script>
+  <script type="module" src="js/userService.js"></script>
+  <script type="module" src="js/masiniService.js"></script>
+  <script type="module" src="js/locatiiService.js"></script>
+  <script type="module" src="js/inchirieriService.js"></script>
+  <script type="module" src="js/reviewsService.js"></script>
+  <script type="module" src="js/app.js"></script>
