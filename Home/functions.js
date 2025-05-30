@@ -1,6 +1,7 @@
 import { createAccountPage } from "../Account/functions.js";
 import { createRentalPage } from "../Rental/functions.js";
 import { getAllCars } from "./service.js";
+import { createCarsPage } from "../Cars/functions.js";
 
 export async function loadCars(offset = 0, limit = 8, userId) {
     try {
@@ -32,11 +33,10 @@ export async function createHomePage(userId) {
         <a href="#" class="home-link"><p>Home</p></a>
         <a href="#"><p>About</p></a>
         <a href="#"><p>Contact</p></a>
+        <a href="#" class = "cars-link"><p>Cars</p></a>
     </div>
     <div class="navigation-container-icons">
         <a href="#" class="user-icon"><i class="fa-regular fa-user"></i></a>
-        <a href="#"><i class="fa-regular fa-heart"></i></a>
-        <a href="#" class="shopping-cart-icon"><i class="fa-solid fa-cart-shopping"></i></a>
     </div>
 </div>
 
@@ -74,7 +74,6 @@ export async function createHomePage(userId) {
             <p class="description">123 Main Street, City Center <br> Romania</p>
         </div>
         <div class="links-section">
-            <p class="description">Links</p>
             <a href="#"><p>Home</p></a>
             <a href="#"><p>Cars</p></a>
             <a href="#"><p>About</p></a>
@@ -93,7 +92,9 @@ export async function createHomePage(userId) {
     </div>
 </div>
     `;
-
+    document.querySelector('.user-icon').addEventListener("click", () => {createAccountPage(userId); });
+    container.querySelector(".home-link").addEventListener("click", () => createHomePage(userId));
+    container.querySelector(".cars-link").addEventListener("click", () => createCarsPage(userId));
 
     const userIcon = document.querySelector('.user-icon');
     userIcon.addEventListener('click', () => {
@@ -118,7 +119,7 @@ function createCarCard(car, userId) {
         <img src="assets/imgs/test.jpg" alt="Imagine mașină">
         <p><strong>${car.marca} ${car.model}</strong></p>
         <p class="description">An fabricație: ${car.anFabricatie}</p>
-        <p><strong>$${car.pretPeZi}</strong> / zi</p>
+        <p><strong>${car.pretPeZi} Lei </strong> / zi</p>
         <button class="rent-now-btn" data-id="${car.id}">Închiriază</button>
     `;
 

@@ -1,5 +1,6 @@
-import { getUserById, updateUser } from "./service.js";
+import { getUserById, updateUser, getRentalsByUserId } from "./service.js";
 import { createHomePage } from "../Home/functions.js";
+import { createCarsPage } from "../Cars/functions.js";
 
 export async function createAccountPage(userId) {
     let container = document.querySelector('.container');
@@ -13,6 +14,7 @@ export async function createAccountPage(userId) {
             <a href="#" class="home-link"><p>Home</p></a>
             <a href="#"><p>About</p></a>
             <a href="#"><p>Contact</p></a>
+            <a href="#" class="cars-link"><p>Cars</p></a>
         </div>
         <div class="navigation-container-icons">
             <a href="#" class="user-icon"><i class="fa-regular fa-user"></i></a>
@@ -54,7 +56,6 @@ export async function createAccountPage(userId) {
                 <p class="description">Your mobility partner.</p>
             </div>
             <div class="links-section">
-                <p class="description">Links</p>
                 <a href="#"><p>Home</p></a>
                 <a href="#"><p>About</p></a>
                 <a href="#"><p>Contact</p></a>
@@ -67,8 +68,9 @@ export async function createAccountPage(userId) {
     </div>
     `;
 
-    container.querySelector(".home-link").addEventListener("click", () => createHomePage(userId));
+    container.querySelector(".home-link").addEventListener("click", () => createCarsPage(userId));
     container.querySelector(".user-icon").addEventListener("click", () => createAccountPage(userId));
+    container.querySelector(".cars-link").addEventListener("click", () => createCarsPage(userId));
 
     container.querySelector(".save-changes-button").addEventListener("click", async () => {
         const fullNameInput = document.getElementById('fullName');
@@ -109,18 +111,47 @@ export async function createAccountPage(userId) {
         rightSide.innerHTML = `<h2>Your Rentals</h2>`;
 
         if (rentals.length > 0) {
-            rentals.forEach(rental => {
-                const rentalDiv = document.createElement("div");
-                rentalDiv.className = "rental-card";
-                rentalDiv.innerHTML = `
-                    <p><b>Car:</b> ${rental.car.model} (${rental.car.brand})</p>
-                    <p><b>From:</b> ${rental.startDate}</p>
-                    <p><b>To:</b> ${rental.endDate}</p>
-                    <p><b>Status:</b> ${rental.status}</p>
-                    <hr/>
-                `;
-                rightSide.appendChild(rentalDiv);
-            });
+            for (const rental of rentals) {
+                try {
+                    const response = await fetch(`http://localhost:8080/api/masini/${rental.masinaId}`);
+                    const masina = await response.json();
+
+                    const rentalDiv = document.createElement("div");
+                    rentalDiv.className = "rental-card";
+                    rentalDiv.innerHTML = `
+                        <p><b>Car:</b> ${masina.model} (${masina.marca})</p>
+                        <p><b>From:</b> ${rental.dataInceput}</p>
+                        <p><b>To:</b> ${rental.dataSfarsit}</p>
+                        <button class="delete-rental-btn" data-id="${rental.id}">Delete</button>
+                        <hr/>
+                    `;
+                    rightSide.appendChild(rentalDiv);
+
+                    rentalDiv.querySelector(".delete-rental-btn").addEventListener("click", async () => {
+                        const confirmDelete = confirm("Are you sure you want to delete this rental?");
+                        if (!confirmDelete) return;
+
+                        try {
+                            const res = await fetch(`http://localhost:8080/api/inchirieri/${rental.id}`, {
+                                method: "DELETE"
+                            });
+
+                            if (res.ok) {
+                                alert("Rental deleted.");
+                                rightSide.removeChild(rentalDiv);
+                            } else {
+                                alert("Failed to delete rental.");
+                            }
+                        } catch (e) {
+                            console.error("Delete error:", e);
+                            alert("Error deleting rental.");
+                        }
+                    });
+
+                } catch (error) {
+                    console.error("Failed to fetch car details:", error);
+                }
+            }
         } else {
             rightSide.innerHTML += `<p>No rentals found.</p>`;
         }

@@ -81,17 +81,24 @@ locationSelect.addEventListener("change", async () => {
 
         const locationId = locationSelect.value;
         const carId = carSelect.value;
-        const startDate = document.getElementById("start-date").value;
-        const endDate = document.getElementById("end-date").value;
+        const data_inceput = document.getElementById("start-date").value;
+        const data_sfarsit = document.getElementById("end-date").value;
 
-        if (!locationId || !carId || !startDate || !endDate) {
+        if (!locationId || !carId || !data_inceput || !data_sfarsit) {
             alert("Please complete all fields.");
             return;
         }
 
-        const response = await rentCar({ userId, carId, locatieId: locationId, startDate, endDate });
+        const response = await rentCar({
+    userId,
+    masinaId: carId,
+    locatieId: locationId,
+    dataInceput: data_inceput,
+    dataSfarsit: data_sfarsit
+});
 
-        if (response.status === 201) {
+
+        if (response.status === 200) {
             alert("Car successfully rented!");
             createAccountPage(userId);
         } else {
