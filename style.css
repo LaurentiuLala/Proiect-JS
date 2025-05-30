@@ -1,100 +1,559 @@
-body {
-    font-family: Arial, sans-serif;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #f5f5f5;
+/* General */
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f7fa;
+    color: #333;
 }
 
 .container {
-    background: white;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+}
+
+/* Header */
+.header-container {
+    background-color: #fff;
+    padding: 20px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.header-container h1 {
+    font-size: 28px;
+    color: #2e86de;
+}
+
+.navigation-container,
+.navigation-container-icons {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.navigation-container a,
+.navigation-container-icons a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+}
+
+.navigation-container-icons i {
+    font-size: 18px;
+}
+
+/* Aside Container */
+.aside-container {
+    background: linear-gradient(135deg, #2e86de 0%, #54a0ff 100%);
+    padding: 60px 40px;
+    border-radius: 8px;
+    color: white;
+    text-align: left;
+    margin-top: 20px;
+}
+
+.aside-container h2 {
+    font-size: 32px;
+    margin: 10px 0;
+}
+
+.line-space {
+    letter-spacing: 1.5px;
+    font-weight: bold;
+}
+
+/* Main Products */
+.main-container {
+    margin-top: 40px;
+}
+
+.products-container {
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.products-container .title h1 {
+    font-size: 26px;
     margin-bottom: 20px;
 }
 
-h1 {
-    color: #333;
+.card-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.product-card {
+    background-color: #fdfdfd;
+    padding: 16px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     text-align: center;
-    margin-bottom: 30px;
+    transition: 0.3s;
 }
 
-h2, h3 {
-    color: #444;
-    border-bottom: 2px solid #007bff;
-    padding-bottom: 5px;
-}
-
-.form-group {
-    margin-bottom: 15px;
-}
-
-input, select, textarea {
+.product-card img {
     width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 14px;
-    box-sizing: border-box;
-    margin-bottom: 10px;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 6px;
 }
 
-button {
-    background-color: #007bff;
+.product-card p {
+    margin: 10px 0;
+    font-size: 15px;
+}
+
+.rent-now-btn {
+    background-color: #2e86de;
     color: white;
-    padding: 10px 20px;
     border: none;
+    padding: 10px 16px;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 14px;
-    margin: 5px;
+    font-weight: bold;
 }
 
-button:hover {
-    background-color: #0056b3;
+.rent-now-btn:hover {
+    background-color: #1e66c1;
 }
 
-.danger {
-    background-color: #dc3545;
-}
-
-.danger:hover {
-    background-color: #c82333;
-}
-
-ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-li {
-    background: #f8f9fa;
-    margin: 5px 0;
-    padding: 10px;
+/* Show More */
+.show-more-button {
+    margin: 20px auto 0;
+    display: block;
+    padding: 10px 20px;
+    border: 2px solid #2e86de;
+    background-color: transparent;
+    color: #2e86de;
     border-radius: 5px;
-    border-left: 4px solid #007bff;
+    cursor: pointer;
+    transition: 0.2s;
 }
 
-.section {
-    margin-bottom: 30px;
-    padding: 20px;
-    background: white;
+.show-more-button:hover {
+    background-color: #2e86de;
+    color: white;
+}
+
+/* Setup container */
+.setup-container {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.setup-container img {
+    max-width: 100%;
+    height: auto;
     border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-.row {
+/* Footer */
+.footer-container {
+    background-color: #fff;
+    margin-top: 60px;
+    padding: 40px 20px;
+    color: #666;
+    font-size: 14px;
+}
+
+.footer-section {
     display: flex;
-    gap: 20px;
+    justify-content: space-between;
     flex-wrap: wrap;
 }
 
-.col {
-    flex: 1;
-    min-width: 300px;
+.footer-section div {
+    flex: 1 1 30%;
+    margin: 10px;
 }
 
-.hidden {
-    display: none;
+.footer-section h4 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.footer-section a {
+    text-decoration: none;
+    color: #333;
+}
+
+.end-section {
+    text-align: center;
+    margin-top: 20px;
+    color: #aaa;
+}
+
+/* Login & Register */
+.login-page, .register-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 90vh;
+}
+
+.login-container, .register-container {
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.login-container h1,
+.register-container h1 {
+    margin-bottom: 30px;
+    color: #2e86de;
+}
+
+.email-input, .password-input, .name-input {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+input[type="email"],
+input[type="password"],
+input[type="text"] {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+button.login-button,
+button.register-button {
+    width: 100%;
+    background-color: #2e86de;
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 16px;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #1e66c1;
+}
+
+.error-message {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #ffcdd2;
+    border: 1px solid #f44336;
+    color: #b71c1c;
+    border-radius: 6px;
+}
+/* Rental Page */
+.rental-page {
+    background-color: #ffffff;
+    padding: 40px;
+    max-width: 600px;
+    margin: 50px auto;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    text-align: center;
+}
+
+.rental-page h1 {
+    color: #2e86de;
+    margin-bottom: 20px;
+}
+
+.rental-page p {
+    font-size: 16px;
+    margin-bottom: 30px;
+}
+
+.rental-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: stretch;
+}
+
+.rental-form label {
+    text-align: left;
+    font-weight: 500;
+    color: #333;
+}
+
+.rental-form input[type="date"] {
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    width: 100%;
+}
+
+.rental-form button[type="submit"],
+#back-to-account {
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: 0.2s;
+}
+
+.rental-form button[type="submit"] {
+    background-color: #2e86de;
+    color: white;
+}
+
+.rental-form button[type="submit"]:hover {
+    background-color: #1e66c1;
+}
+
+#back-to-account {
+    background-color: transparent;
+    color: #2e86de;
+    border: 2px solid #2e86de;
+}
+
+#back-to-account:hover {
+    background-color: #2e86de;
+    color: white;
+}
+/* Stil pentru select din formular */
+.rental-form select {
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    width: 100%;
+    background-color: white;
+    color: #333;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+.rental-form select:focus {
+    border-color: #2e86de;
+    box-shadow: 0 0 5px rgba(46, 134, 222, 0.5);
+    outline: none;
+}
+
+/* Stil pentru select dezactivat */
+.rental-form select:disabled {
+    background-color: #f0f0f0;
+    color: #aaa;
+    cursor: not-allowed;
+}
+
+
+/* Container general */
+.container {
+  max-width: 1100px;
+  margin: 20px auto;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
+
+/* Header */
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 2px solid #ddd;
+}
+
+.header-container h1 {
+  font-weight: 700;
+  color: #2c3e50;
+  margin-left: 10px;
+}
+
+.navigation-container, .navigation-container-icons {
+  display: flex;
+  gap: 20px;
+}
+
+.navigation-container a, .navigation-container-icons a {
+  text-decoration: none;
+  color: #2c3e50;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.navigation-container a:hover, .navigation-container-icons a:hover {
+  color: #2980b9;
+}
+
+/* Aside breadcrumb */
+.aside-container-cart {
+  margin: 20px 0;
+}
+
+.cart-container h1 {
+  margin-bottom: 5px;
+  font-size: 28px;
+  font-weight: 700;
+  color: #34495e;
+}
+
+.cart-container p {
+  font-size: 14px;
+  color: #7f8c8d;
+}
+
+/* Main container - două coloane */
+.main-container-account {
+  display: flex;
+  gap: 30px;
+  margin-bottom: 40px;
+}
+
+/* Stânga: butoane */
+.left-side-buttons {
+  flex: 0 0 180px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.left-side-buttons button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #ecf0f1;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.left-side-buttons button:disabled {
+  background-color: #3498db;
+  color: white;
+  cursor: default;
+}
+
+.left-side-buttons button:not(:disabled):hover {
+  background-color: #2980b9;
+  color: white;
+}
+
+/* Dreapta: informații cont / închirieri */
+.right-side-info {
+  flex: 1;
+  background-color: #fafafa;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
+}
+
+/* Input-uri */
+.right-side-info div {
+  margin-bottom: 20px;
+}
+
+.right-side-info p {
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: #34495e;
+}
+
+.right-side-info input[type="email"],
+.right-side-info input[type="text"] {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1.5px solid #ccc;
+  border-radius: 6px;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+}
+
+.right-side-info input[type="email"]:focus,
+.right-side-info input[type="text"]:focus {
+  outline: none;
+  border-color: #2980b9;
+}
+
+/* Buton Salvează */
+.save-changes-button {
+  background-color: #27ae60;
+  color: white;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.save-changes-button:hover {
+  background-color: #219150;
+}
+
+/* Carduri închirieri */
+.rental-card {
+  background-color: white;
+  border-radius: 6px;
+  padding: 15px 20px;
+  margin-bottom: 15px;
+  box-shadow: 0 1px 5px rgb(0 0 0 / 0.1);
+  font-size: 14px;
+  color: #2c3e50;
+}
+
+.rental-card p {
+  margin: 5px 0;
+}
+
+/* Footer */
+.footer-container {
+  font-size: 14px;
+  color: #95a5a6;
+  padding: 15px 0 40px 0;
+  text-align: center;
+}
+
+.footer-section {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+}
+
+.address-section h4 {
+  font-size: 18px;
+  color: #2c3e50;
+  margin-bottom: 6px;
+}
+
+.links-section p {
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #34495e;
+}
+
+.links-section a {
+  color: #7f8c8d;
+  text-decoration: none;
+  display: block;
+  margin-bottom: 6px;
+  transition: color 0.3s ease;
+}
+
+.links-section a:hover {
+  color: #2980b9;
+}
+
+.end-section p {
+  font-size: 13px;
+  color: #7f8c8d;
 }
