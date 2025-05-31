@@ -2,6 +2,7 @@ import { createAccountPage } from "../Account/functions.js";
 import { createRentalPage } from "../Rental/functions.js";
 import { getAllCars } from "./service.js";
 import { createCarsPage } from "../Cars/functions.js";
+import { createClientReviewPage } from "../Review/functions.js";
 
 export async function loadCars(offset = 0, limit = 8, userId) {
     try {
@@ -21,7 +22,7 @@ export async function loadCars(offset = 0, limit = 8, userId) {
 }
 
 
-export async function createHomePage(userId) {
+export async function createHomePage(userId,role) {
     let container = document.querySelector(".container");
     let ct = 0;
     const limit = 8;
@@ -34,6 +35,7 @@ export async function createHomePage(userId) {
         <a href="#"><p>About</p></a>
         <a href="#"><p>Contact</p></a>
         <a href="#" class = "cars-link"><p>Cars</p></a>
+        <a href="#" class = "review-link"><p>Reviews</p></a>
     </div>
     <div class="navigation-container-icons">
         <a href="#" class="user-icon"><i class="fa-regular fa-user"></i></a>
@@ -54,7 +56,6 @@ export async function createHomePage(userId) {
             <h1>Available Cars</h1>
         </div>
         <div class="card-section">
-            <!-- Car cards will be rendered here -->
         </div>
         <button class="show-more-button">Show More</button>
     </div>
@@ -95,6 +96,7 @@ export async function createHomePage(userId) {
     document.querySelector('.user-icon').addEventListener("click", () => {createAccountPage(userId); });
     container.querySelector(".home-link").addEventListener("click", () => createHomePage(userId));
     container.querySelector(".cars-link").addEventListener("click", () => createCarsPage(userId));
+    container.querySelector(".review-link").addEventListener("click", () => createClientReviewPage(userId,role));
 
     const userIcon = document.querySelector('.user-icon');
     userIcon.addEventListener('click', () => {

@@ -1,5 +1,6 @@
 import { login, register } from "./service.js";
 import { createHomePage } from "../Home/functions.js";
+import { createAdminPage } from "../Admin/functions.js";
 
 
 export function createLoginPage(){
@@ -52,12 +53,17 @@ export function createLoginPage(){
         };
 
         const result = await login(loginRequest);
-        if(result.status=== 200){
-
-            const data = result.body;
-            const id = data.id;
-            createHomePage(id);
-        }else{
+            if (result.status === 200) {
+                const data = result.body;
+                const userId = data.id;
+                const role = data.role; 
+            
+                if (role === "ADMIN") {
+                 createAdminPage(userId,role);
+                     } else {
+                 createHomePage(userId,role);
+             }
+            }else{
             const error = document.querySelector(".login-error");
             if(error){
                 error.remove();
@@ -97,9 +103,14 @@ export function createRegisterPage(){
                 <input type="password" name="password" id="password-register" placeholder="Your password here">
             </div>
             <div class="name-input">
-                <p>Full name:</p>
-                <input type="text" name="name" id="name-register" placeholder="Your full name here">
+             <p>Name:</p>
+             <input type="text" name="name" id="name-register" placeholder="Your name here">
             </div>
+            <div class="lastname-input">
+            <p>LastName:</p>
+            <input type="text" name="lastName" id="lastname-register" placeholder="Your last name here">
+</div>
+
   
             <p>Already have an account? <a href="#" class="login-link">Log in here</a></p>
             <button class="register-button">Register</button>
@@ -119,14 +130,18 @@ export function createRegisterPage(){
     });
 
     registerButton.addEventListener('click',async () =>{
-        const userRequest = {
-            fullName : document.querySelector('#name-register').value,
-            email: document.querySelector('#email-register').value,
-            password:document.querySelector('#password-register').value,
-        }
+const userRequest = {
+    name: document.querySelector('#name-register').value,
+    lastName: document.querySelector('#lastname-register').value,
+    email: document.querySelector('#email-register').value,
+    password: document.querySelector('#password-register').value,
+}
+
+
+
 
         const result = await register(userRequest);
-        if (result.status == '201') {
+        if (result.status == '200') {
             alert("Successfully registered, please login to continue");
             createLoginPage();
           } else {
