@@ -1,8 +1,9 @@
 import { getUserById, updateUser, getRentalsByUserId } from "./service.js";
 import { createHomePage } from "../Home/functions.js";
 import { createCarsPage } from "../Cars/functions.js";
+import { createClientReviewPage } from "../Review/functions.js";
 
-export async function createAccountPage(userId) {
+export async function createAccountPage(userId,role) {
     let container = document.querySelector('.container');
     let data = await getUserById(userId);
     const user = data.body;
@@ -15,16 +16,10 @@ export async function createAccountPage(userId) {
             <a href="#"><p>About</p></a>
             <a href="#"><p>Contact</p></a>
             <a href="#" class="cars-link"><p>Cars</p></a>
+            <a href="#" class = "review-link"><p>Reviews</p></a>
         </div>
         <div class="navigation-container-icons">
             <a href="#" class="user-icon"><i class="fa-regular fa-user"></i></a>
-        </div>
-    </div>
-
-    <div class="aside-container-cart">
-        <div class="cart-container">
-            <h1>Account</h1>
-            <p><b>Home ></b> Account</p>
         </div>
     </div>
 
@@ -68,9 +63,10 @@ export async function createAccountPage(userId) {
     </div>
     `;
 
-    container.querySelector(".home-link").addEventListener("click", () => createCarsPage(userId));
-    container.querySelector(".user-icon").addEventListener("click", () => createAccountPage(userId));
-    container.querySelector(".cars-link").addEventListener("click", () => createCarsPage(userId));
+    container.querySelector(".home-link").addEventListener("click", () => createHomePage(userId,role));
+    container.querySelector(".user-icon").addEventListener("click", () => createAccountPage(userId,role));
+    container.querySelector(".cars-link").addEventListener("click", () => createCarsPage(userId,role));
+    container.querySelector(".review-link").addEventListener("click", () => createClientReviewPage(userId,role));
 
     container.querySelector(".save-changes-button").addEventListener("click", async () => {
         const fullNameInput = document.getElementById('fullName');

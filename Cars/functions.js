@@ -2,8 +2,9 @@ import { getAllCars, getAllLocations } from "../Home/service.js";
 import { createRentalPage } from "../Rental/functions.js";
 import { createAccountPage } from "../Account/functions.js";
 import { createHomePage } from "../Home/functions.js";
+import { createClientReviewPage } from "../Review/functions.js";
 
-export async function createCarsPage(userId) {
+export async function createCarsPage(userId,role) {
     const container = document.querySelector(".container");
 
     container.innerHTML = `
@@ -14,6 +15,7 @@ export async function createCarsPage(userId) {
                 <a href="#"><p>About</p></a>
                 <a href="#"><p>Contact</p></a>
                 <a href="#" class="cars-link"><p>Cars</p></a>
+                <a href="#" class = "review-link"><p>Reviews</p></a>
             </div>
             <div class="navigation-container-icons">
                 <a href="#" class="user-icon"><i class="fa-regular fa-user"></i></a>
@@ -39,9 +41,10 @@ export async function createCarsPage(userId) {
         </div>
     `;
 
-    document.querySelector('.user-icon').addEventListener("click", () => {createAccountPage(userId); });
-    container.querySelector(".home-link").addEventListener("click", () => createHomePage(userId));
-    container.querySelector(".cars-link").addEventListener("click", () => createCarsPage(userId));
+    document.querySelector('.user-icon').addEventListener("click", () => {createAccountPage(userId,role); });
+    container.querySelector(".home-link").addEventListener("click", () => createHomePage(userId,role));
+    container.querySelector(".cars-link").addEventListener("click", () => createCarsPage(userId,role));
+    container.querySelector(".review-link").addEventListener("click", () => createClientReviewPage(userId,role));
 
     const carsResponse = await getAllCars();
     const locationsResponse = await getAllLocations();

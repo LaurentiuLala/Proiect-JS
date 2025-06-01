@@ -1,7 +1,7 @@
 import { apiFetch } from "../../Home/service.js";
 import { createAdminPage } from "../functions.js";
 
-export async function createMasinaPage(userId) {
+export async function createMasinaPage(userId,role) {
     const container = document.querySelector(".container");
 
     container.innerHTML = `
@@ -71,6 +71,6 @@ if (locatiiResponse.status === 200) {
     }
 
     document.getElementById("MainPage").addEventListener("click", () => {
-        createAdminPage(userId);
+        createAdminPage(userId,role);
     });
 }

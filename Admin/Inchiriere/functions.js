@@ -1,7 +1,7 @@
 import { apiFetch } from "../../Home/service.js";
 import { createAdminPage } from "../functions.js";
 
-export async function seeAllRentPage(userId) {
+export async function seeAllRentPage(userId,role) {
     const container = document.querySelector(".container");
 
     container.innerHTML = `
@@ -55,6 +55,6 @@ export async function seeAllRentPage(userId) {
     }
 
     document.getElementById("MainPage").addEventListener("click", () => {
-        createAdminPage(userId);
+        createAdminPage(userId,role);
     });
 }

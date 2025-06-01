@@ -1,0 +1,50 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="admin-subpage">
+
+        <div class="header-container">
+        <h1>RentApp</h1>
+        <div class="navigation-container">
+            <a href="#" class="home-link"><p>Home</p></a>
+            <a href="#"><p>About</p></a>
+            <a href="#"><p>Contact</p></a>
+            <a href="#" class="cars-link"><p>Cars</p></a>
+            <a href="#" class = "review-link"><p>Reviews</p></a>
+        </div>
+        <div class="navigation-container-icons">
+            <a href="#" class="user-icon"><i class="fa-regular fa-user"></i></a>
+        </div>
+    </div>
+
+            <h2>Recenzii</h2>
+            <form id="create-review-form">
+                <select id="masinaId" required>
+                    <option value="">Selectează Mașina</option>
+                </select>
+
+                <textarea id="comentariu" placeholder="Comentariu" rows="3" required></textarea>
+
+                <select id="rating" required>
+                    <option value="">Selectează Rating</option>
+                    <option value="1">⭐</option>
+                    <option value="2">⭐⭐</option>
+                    <option value="3">⭐⭐⭐</option>
+                    <option value="4">⭐⭐⭐⭐</option>
+                    <option value="5">⭐⭐⭐⭐⭐</option>
+                </select>
+
+                <button type="submit">Adaugă Recenzie</button>
+            </form>
+
+            <h2>Toate Recenziile</h2>
+            <ul class="reviews-list"></ul>
+
+            <button id="MainPage">Înapoi la Pagina Principală</button>
+        </div>
+</body>
+</html>

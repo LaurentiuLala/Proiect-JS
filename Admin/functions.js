@@ -21,19 +21,19 @@ container.innerHTML = `
 `;
 
     document.getElementById("add-car").addEventListener("click", () => {
-        createMasinaPage(userId);
+        createMasinaPage(userId,role);
     });
 
     document.getElementById("manage-users").addEventListener("click", () => {
-        createAdminUsersPage(userId);
+        createAdminUsersPage(userId,role);
     });
 
     document.getElementById("add-location").addEventListener("click", () => {
-        createLocationPage(userId);
+        createLocationPage(userId,role);
     });
 
     document.getElementById("view-rentals").addEventListener("click", () => {
-        seeAllRentPage(userId);
+        seeAllRentPage(userId,role);
     });
 
     document.getElementById("btnReview").addEventListener("click", () => {

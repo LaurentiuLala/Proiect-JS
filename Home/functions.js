@@ -93,9 +93,9 @@ export async function createHomePage(userId,role) {
     </div>
 </div>
     `;
-    document.querySelector('.user-icon').addEventListener("click", () => {createAccountPage(userId); });
-    container.querySelector(".home-link").addEventListener("click", () => createHomePage(userId));
-    container.querySelector(".cars-link").addEventListener("click", () => createCarsPage(userId));
+    document.querySelector('.user-icon').addEventListener("click", () => {createAccountPage(userId,roled); });
+    container.querySelector(".home-link").addEventListener("click", () => createHomePage(userId,role));
+    container.querySelector(".cars-link").addEventListener("click", () => createCarsPage(userId,role));
     container.querySelector(".review-link").addEventListener("click", () => createClientReviewPage(userId,role));
 
     const userIcon = document.querySelector('.user-icon');

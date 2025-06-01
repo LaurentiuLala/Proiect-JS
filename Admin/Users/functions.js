@@ -1,7 +1,7 @@
 import { getAllUsers, deleteUserById } from "./service.js";
 import { createAdminPage } from "../functions.js";
 
-export async function createAdminUsersPage(userId) {
+export async function createAdminUsersPage(userId,role) {
     const container = document.querySelector(".container");
 
     container.innerHTML = `
@@ -14,7 +14,7 @@ export async function createAdminUsersPage(userId) {
 
 
     document.getElementById("MainPage").addEventListener("click", () => {
-        createAdminPage(userId);
+        createAdminPage(userId,role);
     });
 
     const response = await getAllUsers();

@@ -65,28 +65,39 @@ export async function createReviewPage(userId, role) {
         const list = document.querySelector(".reviews-list");
         list.innerHTML = "";
 
-        for (const r of response.body) {
-            const userResp = await apiFetch(`/users/account/${r.userId}`);
-            const masinaResp = await apiFetch(`/masini/${r.masinaId}`);
+for (const r of response.body) {
+    if (!r.userId) {
+        console.warn("Review fără userId:", r);
+        continue;
+    }
 
-            const userName = userResp.status === 200 ? userResp.body.nume : r.userId;
-            const masinaName = masinaResp.status === 200 ? `${masinaResp.body.marca} ${masinaResp.body.model}` : r.masinaId;
+    const userResp = await apiFetch(`/users/getUserById/${r.userId}`);
+    const masinaResp = await apiFetch(`/masini/${r.masinaId}`);
 
-            const item = document.createElement("li");
-            item.innerHTML = `
-                <strong>Review #${r.id}</strong> - Utilizator: ${userName}, Mașină: ${masinaName} <br>
-                Rating: ${r.rating} / 5<br>
-                Comentariu: ${r.comentariu}
-                <button class="delete-btn" data-id="${r.id}">Șterge</button>
-            `;
+    const userName = userResp.status === 200 
+        ? `${userResp.body.name} ${userResp.body.lastName}` 
+        : r.userId;
 
-            item.querySelector(".delete-btn").addEventListener("click", async () => {
-                await deleteReviewById(r.id, userId, role); 
-                createReviewPage(userId, role); 
-            });
+    const masinaName = masinaResp.status === 200 
+        ? `${masinaResp.body.marca} ${masinaResp.body.model}` 
+        : r.masinaId;
 
-            list.appendChild(item);
-        }
+    const item = document.createElement("li");
+    item.innerHTML = `
+        <strong>Review #${r.id}</strong> - Utilizator: ${userName}, Mașină: ${masinaName} <br>
+        Rating: ${r.rating} / 5<br>
+        Comentariu: ${r.comentariu}
+        <button class="delete-btn" data-id="${r.id}">Șterge</button>
+    `;
+
+    item.querySelector(".delete-btn").addEventListener("click", async () => {
+        await deleteReviewById(r.id, userId, role); 
+        createReviewPage(userId, role); 
+    });
+
+    list.appendChild(item);
+}
+
     }
 
     document.getElementById("MainPage").addEventListener("click", () => {
