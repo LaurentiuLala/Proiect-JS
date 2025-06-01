@@ -2,7 +2,8 @@ import { getCarById, rentCar, getAllLocations} from "../Home/service.js";
 import { createAccountPage } from "../Account/functions.js";
 import { getCarsByLocation } from "./service.js";
 
-export async function createRentalPage(userId, initialCarId = null) {
+export async function createRentalPage(userId, initialCarId = null,role) {
+    console.log(role);
     const container = document.querySelector(".container");
 
     let locationsResponse;
@@ -100,13 +101,13 @@ locationSelect.addEventListener("change", async () => {
 
         if (response.status === 200) {
             alert("Car successfully rented!");
-            createAccountPage(userId);
+            createAccountPage(userId,role);
         } else {
             alert("Rental failed. Try again.");
         }
     });
 
     document.getElementById("back-to-account").addEventListener("click", () => {
-        createAccountPage(userId);
+        createAccountPage(userId, role);
     });
 }

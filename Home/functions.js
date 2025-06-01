@@ -23,6 +23,7 @@ export async function loadCars(offset = 0, limit = 8, userId) {
 
 
 export async function createHomePage(userId,role) {
+    console.log(role);
     let container = document.querySelector(".container");
     let ct = 0;
     const limit = 8;
@@ -100,7 +101,7 @@ export async function createHomePage(userId,role) {
 
     const userIcon = document.querySelector('.user-icon');
     userIcon.addEventListener('click', () => {
-        createAccountPage(userId);
+        createAccountPage(userId,role);
     });
 
     const showMore = document.querySelector('.show-more-button');
@@ -113,7 +114,7 @@ export async function createHomePage(userId,role) {
 }
 
 
-function createCarCard(car, userId) {
+function createCarCard(car, userId,role) {
     const div = document.createElement("div");
     div.classList.add("product-card");
 
@@ -126,7 +127,7 @@ function createCarCard(car, userId) {
     `;
 
     div.querySelector(".rent-now-btn").addEventListener("click", () => {
-        createRentalPage(userId, car.id);
+        createRentalPage(userId, car.id,role);
     });
 
     return div;

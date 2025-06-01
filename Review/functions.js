@@ -6,6 +6,7 @@ import { createHomePage } from "../Home/functions.js";
 
 export async function createClientReviewPage(userId, role) 
  {
+    console.log(role);
     const container = document.querySelector(".container");
 
     container.innerHTML = `

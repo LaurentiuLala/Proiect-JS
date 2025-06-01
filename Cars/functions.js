@@ -5,6 +5,7 @@ import { createHomePage } from "../Home/functions.js";
 import { createClientReviewPage } from "../Review/functions.js";
 
 export async function createCarsPage(userId,role) {
+    console.log(role);
     const container = document.querySelector(".container");
 
     container.innerHTML = `
@@ -97,7 +98,7 @@ function renderCars(cars, userId) {
     });
 }
 
-function createCarCard(car, userId) {
+function createCarCard(car, userId,role) {
     const div = document.createElement("div");
     div.classList.add("product-card");
 
@@ -111,7 +112,7 @@ function createCarCard(car, userId) {
     `;
 
     div.querySelector(".rent-now-btn").addEventListener("click", () => {
-        createRentalPage(userId, car.id);
+        createRentalPage(userId, car.id, role);
     });
 
     return div;
