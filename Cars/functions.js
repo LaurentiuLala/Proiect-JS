@@ -78,29 +78,31 @@ export async function createCarsPage(userId,role) {
         car.locatieDescriere = locatiiMap.get(car.locatieId) || "Necunoscută";
     });
 
-    renderCars(cars, userId);
+    renderCars(cars, userId,role);
 
     select.addEventListener("change", () => {
         const selectedId = select.value;
         const filteredCars = selectedId === "all"
             ? cars
             : cars.filter(c => c.locatieId == selectedId);
-        renderCars(filteredCars, userId);
+        renderCars(filteredCars, userId,role);
     });
 }
 
-function renderCars(cars, userId) {
+function renderCars(cars, userId,role) {
     const cardSection = document.querySelector(".card-section");
     cardSection.innerHTML = "";
 
-    cars.map(car => createCarCard(car, userId)).forEach(card => {
+    cars.map(car => createCarCard(car, userId,role)).forEach(card => {
         cardSection.appendChild(card);
     });
 }
 
-function createCarCard(car, userId,role) {
+function createCarCard(car, userId, role) {
     const div = document.createElement("div");
     div.classList.add("product-card");
+
+    const isAvailable = car.disponibil;
 
     div.innerHTML = `
         <img src="assets/imgs/test.jpg" alt="Imagine mașină">
@@ -108,12 +110,18 @@ function createCarCard(car, userId,role) {
         <p class="description">An fabricație: ${car.anFabricatie}</p>
         <p class="description">Locație: ${car.locatieDescriere}</p>
         <p><strong>${car.pretPeZi} Lei </strong> / zi</p>
-        <button class="rent-now-btn" data-id="${car.id}">Închiriază</button>
+        ${isAvailable
+            ? `<button class="rent-now-btn" data-id="${car.id}">Închiriază</button>`
+            : `<p style="color: red; font-weight: bold;">Not Available</p>`
+        }
     `;
 
-    div.querySelector(".rent-now-btn").addEventListener("click", () => {
-        createRentalPage(userId, car.id, role);
-    });
+    if (isAvailable) {
+        div.querySelector(".rent-now-btn").addEventListener("click", () => {
+            createRentalPage(userId, car.id, role);
+        });
+    }
 
     return div;
 }
+

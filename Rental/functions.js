@@ -1,8 +1,8 @@
-import { getCarById, rentCar, getAllLocations} from "../Home/service.js";
+import { getCarById, rentCar, getAllLocations } from "../Home/service.js";
 import { createAccountPage } from "../Account/functions.js";
 import { getCarsByLocation } from "./service.js";
 
-export async function createRentalPage(userId, initialCarId = null,role) {
+export async function createRentalPage(userId, initialCarId = null, role) {
     console.log(role);
     const container = document.querySelector(".container");
 
@@ -51,31 +51,38 @@ export async function createRentalPage(userId, initialCarId = null,role) {
     const locationSelect = document.getElementById("location-select");
     const carSelect = document.getElementById("car-select");
 
-locationSelect.addEventListener("change", async () => {
-    const locationId = locationSelect.value.trim();
-    if (!locationId) return;
-
-    carSelect.innerHTML = `<option value="">Loading cars...</option>`;
-    carSelect.disabled = true;
-
-    try {
-        const { status, body: cars } = await getCarsByLocation(locationId);
-        if (status === 200) {
-            if (cars.length === 0) {
-                carSelect.innerHTML = `<option value="">No available cars</option>`;
-            } else {
-                carSelect.innerHTML = `<option value="">-- Choose car --</option>` +
-                    cars.map(car => `<option value="${car.id}">${car.marca} ${car.model}</option>`).join("");
-            }
-            carSelect.disabled = false;
-        } else {
-            carSelect.innerHTML = `<option value="">Error loading cars</option>`;
+    locationSelect.addEventListener("change", async () => {
+        const locationId = locationSelect.value.trim();
+        if (!locationId) {
+            carSelect.innerHTML = `<option value="">-- Select location first --</option>`;
+            carSelect.disabled = true;
+            return;
         }
-    } catch (error) {
-        carSelect.innerHTML = `<option value="">Error loading cars</option>`;
-        console.error("Error loading cars:", error);
-    }
-});
+
+        carSelect.innerHTML = `<option value="">Loading cars...</option>`;
+        carSelect.disabled = true;
+
+        try {
+            const { status, body: cars } = await getCarsByLocation(locationId);
+            if (status === 200) {
+                // Filtrare mașini disponibile
+                const availableCars = cars.filter(car => car.disponibil === true);
+
+                if (availableCars.length === 0) {
+                    carSelect.innerHTML = `<option value="">No available cars</option>`;
+                } else {
+                    carSelect.innerHTML = `<option value="">-- Choose car --</option>` +
+                        availableCars.map(car => `<option value="${car.id}">${car.marca} ${car.model}</option>`).join("");
+                }
+                carSelect.disabled = false;
+            } else {
+                carSelect.innerHTML = `<option value="">Error loading cars</option>`;
+            }
+        } catch (error) {
+            carSelect.innerHTML = `<option value="">Error loading cars</option>`;
+            console.error("Error loading cars:", error);
+        }
+    });
 
     document.querySelector(".rental-form").addEventListener("submit", async (e) => {
         e.preventDefault();
@@ -91,17 +98,16 @@ locationSelect.addEventListener("change", async () => {
         }
 
         const response = await rentCar({
-    userId,
-    masinaId: carId,
-    locatieId: locationId,
-    dataInceput: data_inceput,
-    dataSfarsit: data_sfarsit
-});
-
+            userId,
+            masinaId: carId,
+            locatieId: locationId,
+            dataInceput: data_inceput,
+            dataSfarsit: data_sfarsit
+        });
 
         if (response.status === 200) {
             alert("Car successfully rented!");
-            createAccountPage(userId,role);
+            createAccountPage(userId, role);
         } else {
             alert("Rental failed. Try again.");
         }

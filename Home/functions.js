@@ -4,13 +4,13 @@ import { getAllCars } from "./service.js";
 import { createCarsPage } from "../Cars/functions.js";
 import { createClientReviewPage } from "../Review/functions.js";
 
-export async function loadCars(offset = 0, limit = 8, userId) {
+export async function loadCars(offset = 0, limit = 8, userId,role) {
     try {
         let response = await getAllCars();
         let cars = response.body;
 
         let limitedCars = cars.slice(offset, offset + limit);
-        attachCarCards(limitedCars, userId);
+        attachCarCards(limitedCars, userId,role);
 
         if (offset + limit >= cars.length) {
             const showMore = document.querySelector('.show-more-button');
@@ -94,7 +94,7 @@ export async function createHomePage(userId,role) {
     </div>
 </div>
     `;
-    document.querySelector('.user-icon').addEventListener("click", () => {createAccountPage(userId,roled); });
+    document.querySelector('.user-icon').addEventListener("click", () => {createAccountPage(userId,role); });
     container.querySelector(".home-link").addEventListener("click", () => createHomePage(userId,role));
     container.querySelector(".cars-link").addEventListener("click", () => createCarsPage(userId,role));
     container.querySelector(".review-link").addEventListener("click", () => createClientReviewPage(userId,role));
@@ -107,35 +107,43 @@ export async function createHomePage(userId,role) {
     const showMore = document.querySelector('.show-more-button');
     showMore.addEventListener('click', () => {
         ct += limit;
-        loadCars(ct, limit, userId);
+        loadCars(ct, limit, userId,role);
     });
 
-    loadCars(ct, limit, userId);
+    loadCars(ct, limit, userId,role);
 }
 
 
-function createCarCard(car, userId,role) {
+function createCarCard(car, userId, role) {
     const div = document.createElement("div");
     div.classList.add("product-card");
+    const isAvailable = car.disponibil;
 
     div.innerHTML = `
         <img src="assets/imgs/test.jpg" alt="Imagine mașină">
         <p><strong>${car.marca} ${car.model}</strong></p>
         <p class="description">An fabricație: ${car.anFabricatie}</p>
+        <p class="description">Locație: ${car.locatieDescriere}</p>
         <p><strong>${car.pretPeZi} Lei </strong> / zi</p>
-        <button class="rent-now-btn" data-id="${car.id}">Închiriază</button>
+        ${isAvailable
+            ? `<button class="rent-now-btn" data-id="${car.id}">Închiriază</button>`
+            : `<p style="color: red; font-weight: bold;">Not Available</p>`
+        }
     `;
 
-    div.querySelector(".rent-now-btn").addEventListener("click", () => {
-        createRentalPage(userId, car.id,role);
-    });
+    if (isAvailable) {
+        div.querySelector(".rent-now-btn").addEventListener("click", () => {
+            createRentalPage(userId, car.id, role);
+        });
+    }
 
     return div;
 }
 
-function attachCarCards(cars, userId) {
+
+function attachCarCards(cars, userId,role) {
     let cardSection = document.querySelector('.card-section');
-    cars.map(car => createCarCard(car, userId)).forEach(card => {
+    cars.map(car => createCarCard(car, userId,role)).forEach(card => {
         cardSection.appendChild(card);
     });
 }
