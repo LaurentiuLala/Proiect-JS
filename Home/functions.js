@@ -1,45 +1,42 @@
 import { createAccountPage } from "../Account/functions.js";
 import { createRentalPage } from "../Rental/functions.js";
-import { getAllCars } from "./service.js";
+import { getAllCars } from "../Cars/service.js";
+import { getAllLocations } from "../Locatii/service.js";
 import { createCarsPage } from "../Cars/functions.js";
 import { createClientReviewPage } from "../Review/functions.js";
+import { handleLogout } from "../Logout/functions.js";
+import { createAboutPage } from "../About/functions.js";
+import { createContactPage } from "../Contact/functions.js";
 
-export async function loadCars(offset = 0, limit = 8, userId,role) {
-    try {
-        let response = await getAllCars();
-        let cars = response.body;
-
-        let limitedCars = cars.slice(offset, offset + limit);
-        attachCarCards(limitedCars, userId,role);
-
-        if (offset + limit >= cars.length) {
-            const showMore = document.querySelector('.show-more-button');
-            showMore.style.display = 'none';
-        }
-    } catch (err) {
-        console.log("Eroare la încărcarea mașinilor:", err);
-    }
-}
-
-
-export async function createHomePage(userId,role) {
+export async function createHomePage(userId, role) {
     console.log(role);
     let container = document.querySelector(".container");
     let ct = 0;
     const limit = 8;
+
+    // Obține locațiile pentru a putea atașa descrierea la fiecare mașină
+    const locationsResponse = await getAllLocations();
+    const locations = locationsResponse.status === 200 ? locationsResponse.body : [];
+
+    const locatiiMap = new Map();
+    locations.forEach(loc => {
+        const descriere = `${loc.oras}, ${loc.strada} ${loc.numar}`;
+        locatiiMap.set(loc.id, descriere);
+    });
 
     container.innerHTML = `
 <div class="header-container">
     <h1>RentApp</h1>
     <div class="navigation-container">
         <a href="#" class="home-link"><p>Home</p></a>
-        <a href="#"><p>About</p></a>
-        <a href="#"><p>Contact</p></a>
-        <a href="#" class = "cars-link"><p>Cars</p></a>
-        <a href="#" class = "review-link"><p>Reviews</p></a>
+        <a href="#" class="about-link"><p>About</p></a>
+        <a href="#" class="contact-link"><p>Contact</p></a>
+        <a href="#" class="cars-link"><p>Cars</p></a>
+        <a href="#" class="review-link"><p>Reviews</p></a>
     </div>
     <div class="navigation-container-icons">
-        <a href="#" class="user-icon"><i class="fa-regular fa-user"></i></a>
+        <a href="#" class="user-icon" title="Account"><i class="fa-regular fa-user"></i></a>
+        <a href="#" class="logout-icon" title="Logout"><i class="fa-solid fa-right-from-bracket"></i></a>
     </div>
 </div>
 
@@ -56,8 +53,7 @@ export async function createHomePage(userId,role) {
         <div class="title">
             <h1>Available Cars</h1>
         </div>
-        <div class="card-section">
-        </div>
+        <div class="card-section"></div>
         <button class="show-more-button">Show More</button>
     </div>
 
@@ -94,30 +90,52 @@ export async function createHomePage(userId,role) {
     </div>
 </div>
     `;
-    document.querySelector('.user-icon').addEventListener("click", () => {createAccountPage(userId,role); });
-    container.querySelector(".home-link").addEventListener("click", () => createHomePage(userId,role));
-    container.querySelector(".cars-link").addEventListener("click", () => createCarsPage(userId,role));
-    container.querySelector(".review-link").addEventListener("click", () => createClientReviewPage(userId,role));
 
-    const userIcon = document.querySelector('.user-icon');
-    userIcon.addEventListener('click', () => {
-        createAccountPage(userId,role);
-    });
+    document.querySelector('.user-icon').addEventListener("click", () => createAccountPage(userId, role));
+    document.querySelector('.logout-icon').addEventListener("click", () => handleLogout());
+    container.querySelector(".home-link").addEventListener("click", () => createHomePage(userId, role));
+    container.querySelector(".about-link").addEventListener("click", () => createAboutPage(userId, role));
+    container.querySelector(".contact-link").addEventListener("click", () => createContactPage(userId, role));
+    container.querySelector(".cars-link").addEventListener("click", () => createCarsPage(userId, role));
+    container.querySelector(".review-link").addEventListener("click", () => createClientReviewPage(userId, role));
 
     const showMore = document.querySelector('.show-more-button');
     showMore.addEventListener('click', () => {
         ct += limit;
-        loadCars(ct, limit, userId,role);
+        loadCars(ct, limit, userId, role, locatiiMap);
     });
 
-    loadCars(ct, limit, userId,role);
+    // Încărcarea inițială
+    loadCars(ct, limit, userId, role, locatiiMap);
 }
 
+export async function loadCars(offset = 0, limit = 8, userId, role, locatiiMap = new Map()) {
+    try {
+        let response = await getAllCars();
+        let cars = response.body;
+
+        // Adaugă descrierea locației pentru fiecare mașină
+        cars.forEach(car => {
+            car.locatieDescriere = locatiiMap.get(car.locatieId) || "Necunoscută";
+        });
+
+        let limitedCars = cars.slice(offset, offset + limit);
+        attachCarCards(limitedCars, userId, role);
+
+        if (offset + limit >= cars.length) {
+            const showMore = document.querySelector('.show-more-button');
+            showMore.style.display = 'none';
+        }
+    } catch (err) {
+        console.log("Eroare la încărcarea mașinilor:", err);
+    }
+}
 
 function createCarCard(car, userId, role) {
     const div = document.createElement("div");
     div.classList.add("product-card");
-    const isAvailable = car.disponibil;
+
+    const isAvailable = car.cantitate > 0;
 
     div.innerHTML = `
         <img src="assets/imgs/test.jpg" alt="Imagine mașină">
@@ -140,10 +158,9 @@ function createCarCard(car, userId, role) {
     return div;
 }
 
-
-function attachCarCards(cars, userId,role) {
+function attachCarCards(cars, userId, role) {
     let cardSection = document.querySelector('.card-section');
-    cars.map(car => createCarCard(car, userId,role)).forEach(card => {
+    cars.map(car => createCarCard(car, userId, role)).forEach(card => {
         cardSection.appendChild(card);
     });
 }

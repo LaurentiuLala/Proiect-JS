@@ -1,4 +1,4 @@
-import { getAllUsers, deleteUserById } from "./service.js";
+import { getAllUsers, deleteUserById } from "../../User/service.js";
 import { createAdminPage } from "../functions.js";
 
 export async function createAdminUsersPage(userId,role) {
@@ -25,11 +25,11 @@ export async function createAdminUsersPage(userId,role) {
     }
 
     const users = response.body;
-    renderUsers(users, userId);
+    renderUsers(users, userId, role);
 }
 
 
-function renderUsers(users, userId) {
+function renderUsers(users, userId, role) {
     const usersList = document.querySelector(".users-list");
     usersList.innerHTML = "";
 
@@ -46,7 +46,7 @@ function renderUsers(users, userId) {
 
         userDiv.querySelector(".delete-user-btn").addEventListener("click", async () => {
             await deleteUserById(user.id);
-            createAdminUsersPage(userId);  
+            createAdminUsersPage(userId, role);  
         });
 
         usersList.appendChild(userDiv);

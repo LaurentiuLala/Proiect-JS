@@ -1,4 +1,6 @@
-import { apiFetch } from "../../Home/service.js";
+import { getAllRentals, deleteRental } from "../../Rental/service.js";
+import { getUserById } from "../../User/service.js";
+import { getCarById } from "../../Cars/service.js";
 import { createAdminPage } from "../functions.js";
 
 export async function seeAllRentPage(userId,role) {
@@ -12,7 +14,7 @@ export async function seeAllRentPage(userId,role) {
         </div>
     `;
 
-    const response = await apiFetch("/inchirieri");
+    const response = await getAllRentals();
     if (response.status === 200) {
         const list = document.querySelector(".rents-list");
 
@@ -23,7 +25,7 @@ export async function seeAllRentPage(userId,role) {
             if (r.user && r.user.name && r.user.lastName) {
                 userName = `${r.user.name} ${r.user.lastName}`;
             } else if (r.userId) {
-                const userResp = await apiFetch(`/users/getUserById/${r.userId}`);
+                const userResp = await getUserById(r.userId);
                 if (userResp.status === 200) {
                     userName = `${userResp.body.name} ${userResp.body.lastName}`;
                 }
@@ -32,7 +34,7 @@ export async function seeAllRentPage(userId,role) {
             if (r.masina && r.masina.marca && r.masina.model) {
                 masinaName = `${r.masina.marca} ${r.masina.model}`;
             } else if (r.masinaId) {
-                const masinaResp = await apiFetch(`/masini/${r.masinaId}`);
+                const masinaResp = await getCarById(r.masinaId);
                 if (masinaResp.status === 200) {
                     masinaName = `${masinaResp.body.marca} ${masinaResp.body.model}`;
                 }
@@ -46,8 +48,8 @@ export async function seeAllRentPage(userId,role) {
             `;
 
             item.querySelector(".delete-btn").addEventListener("click", async () => {
-                await apiFetch(`/inchirieri/${r.id}`, "DELETE");
-                seeAllRentPage();
+                await deleteRental(r.id);
+                seeAllRentPage(userId, role);
             });
 
             list.appendChild(item);

@@ -1,4 +1,5 @@
-import { apiFetch } from "../../Home/service.js";
+import { createCar, getAllCars, deleteCar } from "../../Cars/service.js";
+import { getAllLocations } from "../../Locatii/service.js";
 import { createAdminPage } from "../functions.js";
 
 export async function createMasinaPage(userId,role) {
@@ -12,6 +13,7 @@ export async function createMasinaPage(userId,role) {
                 <input type="text" id="model" placeholder="Model" required>
                 <input type="number" id="anFabricatie" placeholder="An fabricație" required>
                 <input type="number" id="pretPeZi" placeholder="Preț pe zi" required>
+                <input type="number" id="cantitate" placeholder="Cantitate" required>
                 <select id="locatieId" required>
                     <option value="">Selectează locația</option>
                 </select>
@@ -25,7 +27,7 @@ export async function createMasinaPage(userId,role) {
 
 
     const locatieSelect = document.getElementById("locatieId");
-const locatiiResponse = await apiFetch("/locatii");
+const locatiiResponse = await getAllLocations();
 
 if (locatiiResponse.status === 200) {
     locatiiResponse.body.forEach(locatie => {
@@ -46,25 +48,27 @@ if (locatiiResponse.status === 200) {
             model: document.getElementById("model").value,
             anFabricatie: document.getElementById("anFabricatie").value,
             pretPeZi: document.getElementById("pretPeZi").value,
+            cantitate: document.getElementById("cantitate").value,
+            disponibil: true,
             locatieId: document.getElementById("locatieId").value
         };
 
-        await apiFetch("/masini", "POST", car);
-        createMasinaPage();
+        await createCar(car);
+        createMasinaPage(userId,role);
     });
 
-    const response = await apiFetch("/masini");
+    const response = await getAllCars();
     if (response.status === 200) {
         const list = document.querySelector(".cars-list");
         response.body.forEach(m => {
             const item = document.createElement("li");
             item.innerHTML = `
-                ${m.marca} ${m.model} (${m.anFabricatie}) - ${m.pretPeZi} Lei
+                ${m.marca} ${m.model} (${m.anFabricatie}) - ${m.pretPeZi} Lei - Cantitate: ${m.cantitate}
                 <button class="delete-btn" data-id="${m.id}">Șterge</button>
             `;
             item.querySelector(".delete-btn").addEventListener("click", async () => {
-                await apiFetch(`/masini/${m.id}`, "DELETE");
-                createMasinaPage();
+                await deleteCar(m.id);
+                createMasinaPage(userId,role);
             });
             list.appendChild(item);
         });

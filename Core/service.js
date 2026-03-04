@@ -1,12 +1,20 @@
-const BASE_URL = "http://localhost:8080/api";
+export const BASE_URL = "http://localhost:8080/api";
 
 export async function apiFetch(path, method = "GET", body = null) {
+    const headers = {
+        'Content-Type': 'application/json; charset=utf-8'
+    };
+
+    const auth = localStorage.getItem("auth");
+    const isPublicPath = path === "/users/login" || path === "/users/register";
+
+    if (auth && !isPublicPath) {
+        headers['Authorization'] = `Basic ${auth}`;
+    }
+
     const options = {
         method,
-        headers: {
-            'Content-Type': 'application/json; charset=utf-8',
-            'X-Requested-With': 'XMLHttpRequest'
-        }
+        headers
     };
 
     if (body !== null) {
@@ -30,20 +38,3 @@ export async function apiFetch(path, method = "GET", body = null) {
         };
     }
 }
-
-export async function getAllCars() {
-    return await apiFetch("/masini", "GET");
-}
-
-export async function getCarById(carId) {
-    return await apiFetch(`/masini/${carId}`, "GET");
-}
-
-export async function rentCar(rentalRequest) {
-    return await apiFetch("/inchirieri", "POST", rentalRequest);
-}
-
-export async function getAllLocations() {
-    return await apiFetch("/locatii", "GET");
-}
-

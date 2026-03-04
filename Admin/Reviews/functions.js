@@ -1,6 +1,7 @@
-import { getAllReviews, createReview, deleteReviewById } from "./service.js";
+import { getAllReviews, createReview, deleteReview } from "../../Review/service.js";
+import { getAllCars, getCarById } from "../../Cars/service.js";
+import { getUserById } from "../../User/service.js";
 import { createAdminPage } from "../functions.js";
-import { apiFetch } from "../../Home/service.js";
 
 export async function createReviewPage(userId, role) {
     const container = document.querySelector(".container");
@@ -35,7 +36,7 @@ export async function createReviewPage(userId, role) {
     `;
 
     const masinaSelect = document.getElementById("masinaId");
-    const masiniResp = await apiFetch("/masini");
+    const masiniResp = await getAllCars();
     if (masiniResp.status === 200) {
         masiniResp.body.forEach(m => {
             const option = document.createElement("option");
@@ -45,19 +46,20 @@ export async function createReviewPage(userId, role) {
         });
     }
 
+
     const form = document.getElementById("create-review-form");
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
 
         const review = {
-            userId: userId,
+            userId: String(userId),
             masinaId: document.getElementById("masinaId").value,
             comentariu: document.getElementById("comentariu").value,
             rating: Number(document.getElementById("rating").value)
         };
 
         await createReview(review);
-        createReviewPage(userId, role); 
+        createReviewPage(userId, role);
     });
 
     const response = await getAllReviews();
@@ -65,43 +67,38 @@ export async function createReviewPage(userId, role) {
         const list = document.querySelector(".reviews-list");
         list.innerHTML = "";
 
-for (const r of response.body) {
-    if (!r.userId) {
-        console.warn("Review fără userId:", r);
-        continue;
-    }
+        for (const r of response.body) {
+            if (!r.userId) continue;
 
-    const userResp = await apiFetch(`/users/getUserById/${r.userId}`);
-    const masinaResp = await apiFetch(`/masini/${r.masinaId}`);
+            const userResp = await getUserById(r.userId);
+            const masinaResp = await getCarById(r.masinaId);
 
-    const userName = userResp.status === 200 
-        ? `${userResp.body.name} ${userResp.body.lastName}` 
-        : r.userId;
+            const userName = userResp.status === 200 
+                ? `${userResp.body.name} ${userResp.body.lastName}` 
+                : r.userId;
 
-    const masinaName = masinaResp.status === 200 
-        ? `${masinaResp.body.marca} ${masinaResp.body.model}` 
-        : r.masinaId;
+            const masinaName = masinaResp.status === 200 
+                ? `${masinaResp.body.marca} ${masinaResp.body.model}` 
+                : r.masinaId;
 
-    const item = document.createElement("li");
-    item.innerHTML = `
-        <strong>Review #${r.id}</strong> - Utilizator: ${userName}, Mașină: ${masinaName} <br>
-        Rating: ${r.rating} / 5<br>
-        Comentariu: ${r.comentariu}
-        <button class="delete-btn" data-id="${r.id}">Șterge</button>
-    `;
+            const item = document.createElement("li");
+            item.innerHTML = `
+                <strong>Review #${r.id}</strong> - Utilizator: ${userName}, Mașină: ${masinaName} <br>
+                Rating: ${r.rating} / 5<br>
+                Comentariu: ${r.comentariu}
+                <button class="delete-btn" data-id="${r.id}">Șterge</button>
+            `;
 
-    item.querySelector(".delete-btn").addEventListener("click", async () => {
-        await deleteReviewById(r.id, userId, role); 
-        createReviewPage(userId, role); 
-    });
+            item.querySelector(".delete-btn").addEventListener("click", async () => {
+                await deleteReview(r.id); 
+                createReviewPage(userId, role); 
+            });
 
-    list.appendChild(item);
-}
-
+            list.appendChild(item);
+        }
     }
 
     document.getElementById("MainPage").addEventListener("click", () => {
         createAdminPage(userId, role);
     });
 }
-

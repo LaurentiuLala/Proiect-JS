@@ -1,6 +1,13 @@
-import { getCarById, rentCar, getAllLocations } from "../Home/service.js";
+import { createRental } from "./service.js";
+import { getCarsByLocation, getCarById } from "../Cars/service.js";
+import { getAllLocations } from "../Locatii/service.js";
 import { createAccountPage } from "../Account/functions.js";
-import { getCarsByLocation } from "./service.js";
+import { createHomePage } from "../Home/functions.js";
+import { createAboutPage } from "../About/functions.js";
+import { createContactPage } from "../Contact/functions.js";
+import { createCarsPage } from "../Cars/functions.js";
+import { createClientReviewPage } from "../Review/functions.js";
+import { handleLogout } from "../Logout/functions.js";
 
 export async function createRentalPage(userId, initialCarId = null, role) {
     console.log(role);
@@ -20,8 +27,24 @@ export async function createRentalPage(userId, initialCarId = null, role) {
     }
 
     const locations = locationsResponse.body;
+    const today = new Date().toISOString().split('T')[0];
 
     container.innerHTML = `
+    <div class="header-container">
+        <h1>RentApp</h1>
+        <div class="navigation-container">
+            <a href="#" class="home-link"><p>Home</p></a>
+            <a href="#" class="about-link"><p>About</p></a>
+            <a href="#" class="contact-link"><p>Contact</p></a>
+            <a href="#" class="cars-link"><p>Cars</p></a>
+            <a href="#" class="review-link"><p>Reviews</p></a>
+        </div>
+        <div class="navigation-container-icons">
+            <a href="#" class="user-icon" title="Account"><i class="fa-regular fa-user"></i></a>
+            <a href="#" class="logout-icon" title="Logout"><i class="fa-solid fa-right-from-bracket"></i></a>
+        </div>
+    </div>
+
     <div class="rental-page">
         <h1>Complete Your Rental</h1>
         <form class="rental-form">
@@ -38,8 +61,8 @@ export async function createRentalPage(userId, initialCarId = null, role) {
                 </select>
             </label><br>
 
-            <label>From: <input type="date" id="start-date" required></label><br>
-            <label>To: <input type="date" id="end-date" required></label><br>
+            <label>From: <input type="date" id="start-date" min="${today}" required></label><br>
+            <label>To: <input type="date" id="end-date" min="${today}" required></label><br>
 
             <button type="submit">Confirm Rental</button>
         </form>
@@ -48,8 +71,42 @@ export async function createRentalPage(userId, initialCarId = null, role) {
     </div>
     `;
 
+    // Header Navigation Listeners
+    container.querySelector(".home-link").addEventListener("click", () => createHomePage(userId, role));
+    container.querySelector(".about-link").addEventListener("click", () => createAboutPage(userId, role));
+    container.querySelector(".contact-link").addEventListener("click", () => createContactPage(userId, role));
+    container.querySelector(".cars-link").addEventListener("click", () => createCarsPage(userId, role));
+    container.querySelector(".review-link").addEventListener("click", () => createClientReviewPage(userId, role));
+    container.querySelector(".user-icon").addEventListener("click", () => createAccountPage(userId, role));
+    container.querySelector(".logout-icon").addEventListener("click", () => handleLogout());
+
     const locationSelect = document.getElementById("location-select");
     const carSelect = document.getElementById("car-select");
+
+    const updateCarsDropdown = async (locationId, selectedCarId = null) => {
+        carSelect.innerHTML = `<option value="">Loading cars...</option>`;
+        carSelect.disabled = true;
+
+        try {
+            const { status, body: cars } = await getCarsByLocation(locationId);
+            if (status === 200) {
+                const availableCars = cars.filter(car => car.cantitate > 0);
+
+                if (availableCars.length === 0) {
+                    carSelect.innerHTML = `<option value="">No available cars</option>`;
+                } else {
+                    carSelect.innerHTML = `<option value="">-- Choose car --</option>` +
+                        availableCars.map(car => `<option value="${car.id}" ${car.id == selectedCarId ? 'selected' : ''}>${car.marca} ${car.model}</option>`).join("");
+                    carSelect.disabled = false;
+                }
+            } else {
+                carSelect.innerHTML = `<option value="">Error loading cars</option>`;
+            }
+        } catch (error) {
+            carSelect.innerHTML = `<option value="">Error loading cars</option>`;
+            console.error("Error loading cars:", error);
+        }
+    };
 
     locationSelect.addEventListener("change", async () => {
         const locationId = locationSelect.value.trim();
@@ -58,31 +115,22 @@ export async function createRentalPage(userId, initialCarId = null, role) {
             carSelect.disabled = true;
             return;
         }
+        await updateCarsDropdown(locationId);
+    });
 
-        carSelect.innerHTML = `<option value="">Loading cars...</option>`;
-        carSelect.disabled = true;
-
+    // Handle initial car selection if provided
+    if (initialCarId) {
         try {
-            const { status, body: cars } = await getCarsByLocation(locationId);
-            if (status === 200) {
-                // Filtrare mașini disponibile
-                const availableCars = cars.filter(car => car.disponibil === true);
-
-                if (availableCars.length === 0) {
-                    carSelect.innerHTML = `<option value="">No available cars</option>`;
-                } else {
-                    carSelect.innerHTML = `<option value="">-- Choose car --</option>` +
-                        availableCars.map(car => `<option value="${car.id}">${car.marca} ${car.model}</option>`).join("");
-                }
-                carSelect.disabled = false;
-            } else {
-                carSelect.innerHTML = `<option value="">Error loading cars</option>`;
+            const carResponse = await getCarById(initialCarId);
+            if (carResponse.status === 200) {
+                const car = carResponse.body;
+                locationSelect.value = car.locatieId;
+                await updateCarsDropdown(car.locatieId, initialCarId);
             }
         } catch (error) {
-            carSelect.innerHTML = `<option value="">Error loading cars</option>`;
-            console.error("Error loading cars:", error);
+            console.error("Error fetching initial car details:", error);
         }
-    });
+    }
 
     document.querySelector(".rental-form").addEventListener("submit", async (e) => {
         e.preventDefault();
@@ -97,7 +145,12 @@ export async function createRentalPage(userId, initialCarId = null, role) {
             return;
         }
 
-        const response = await rentCar({
+        if (new Date(data_sfarsit) < new Date(data_inceput)) {
+            alert("End date cannot be before start date.");
+            return;
+        }
+
+        const response = await createRental({
             userId,
             masinaId: carId,
             locatieId: locationId,
@@ -105,7 +158,7 @@ export async function createRentalPage(userId, initialCarId = null, role) {
             dataSfarsit: data_sfarsit
         });
 
-        if (response.status === 200) {
+        if (response.status === 200 || response.status === 201) {
             alert("Car successfully rented!");
             createAccountPage(userId, role);
         } else {

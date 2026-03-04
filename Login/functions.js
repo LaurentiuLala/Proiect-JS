@@ -1,4 +1,4 @@
-import { login, register } from "./service.js";
+import { login, register } from "../User/service.js";
 import { createHomePage } from "../Home/functions.js";
 import { createAdminPage } from "../Admin/functions.js";
 
@@ -58,6 +58,11 @@ export function createLoginPage(){
                 const userId = data.id;
                 const role = data.role; 
             
+                // Store credentials for future requests
+                const auth = btoa(`${email}:${password}`);
+                localStorage.setItem("auth", auth);
+                localStorage.setItem("user", JSON.stringify({ id: userId, role: role }));
+
                 if (role === "ADMIN") {
                  createAdminPage(userId,role);
                      } else {

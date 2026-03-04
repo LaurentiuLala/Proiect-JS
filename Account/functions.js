@@ -1,25 +1,33 @@
-import { getUserById, updateUser, getRentalsByUserId } from "./service.js";
+import { getUserById, updateUser } from "../User/service.js";
+import { getRentalsByUserId, deleteRental } from "../Rental/service.js";
+import { getCarById } from "../Cars/service.js";
 import { createHomePage } from "../Home/functions.js";
 import { createCarsPage } from "../Cars/functions.js";
 import { createClientReviewPage } from "../Review/functions.js";
+import { handleLogout } from "../Logout/functions.js";
+import { createAboutPage } from "../About/functions.js";
+import { createContactPage } from "../Contact/functions.js";
+
 
 export async function createAccountPage(userId,role) {
     let container = document.querySelector('.container');
     let data = await getUserById(userId);
     const user = data.body;
+    console.log(role);
 
     container.innerHTML = `
     <div class="header-container">
         <h1>RentApp</h1>
         <div class="navigation-container">
             <a href="#" class="home-link"><p>Home</p></a>
-            <a href="#"><p>About</p></a>
-            <a href="#"><p>Contact</p></a>
+            <a href="#" class="about-link"><p>About</p></a>
+            <a href="#" class="contact-link"><p>Contact</p></a>
             <a href="#" class="cars-link"><p>Cars</p></a>
             <a href="#" class = "review-link"><p>Reviews</p></a>
         </div>
         <div class="navigation-container-icons">
-            <a href="#" class="user-icon"><i class="fa-regular fa-user"></i></a>
+            <a href="#" class="user-icon" title="Account"><i class="fa-regular fa-user"></i></a>
+            <a href="#" class="logout-icon" title="Logout"><i class="fa-solid fa-right-from-bracket"></i></a>
         </div>
     </div>
 
@@ -64,7 +72,10 @@ export async function createAccountPage(userId,role) {
     `;
 
     container.querySelector(".home-link").addEventListener("click", () => createHomePage(userId,role));
+    container.querySelector(".about-link").addEventListener("click", () => createAboutPage(userId, role));
+    container.querySelector(".contact-link").addEventListener("click", () => createContactPage(userId, role));
     container.querySelector(".user-icon").addEventListener("click", () => createAccountPage(userId,role));
+    container.querySelector(".logout-icon").addEventListener("click", () => handleLogout());
     container.querySelector(".cars-link").addEventListener("click", () => createCarsPage(userId,role));
     container.querySelector(".review-link").addEventListener("click", () => createClientReviewPage(userId,role));
 
@@ -106,11 +117,11 @@ export async function createAccountPage(userId,role) {
 
         rightSide.innerHTML = `<h2>Your Rentals</h2>`;
 
-        if (rentals.length > 0) {
+        if (rentals && rentals.length > 0) {
             for (const rental of rentals) {
                 try {
-                    const response = await fetch(`http://localhost:8080/api/masini/${rental.masinaId}`);
-                    const masina = await response.json();
+                    const response = await getCarById(rental.masinaId);
+                    const masina = response.body;
 
                     const rentalDiv = document.createElement("div");
                     rentalDiv.className = "rental-card";
@@ -128,11 +139,9 @@ export async function createAccountPage(userId,role) {
                         if (!confirmDelete) return;
 
                         try {
-                            const res = await fetch(`http://localhost:8080/api/inchirieri/${rental.id}`, {
-                                method: "DELETE"
-                            });
+                            const res = await deleteRental(rental.id);
 
-                            if (res.ok) {
+                            if (res.status === 204 || res.status === 200) {
                                 alert("Rental deleted.");
                                 rightSide.removeChild(rentalDiv);
                             } else {
@@ -154,6 +163,6 @@ export async function createAccountPage(userId,role) {
     });
 
     container.querySelector(".my-account-button").addEventListener("click", () => {
-        createAccountPage(userId);
+        createAccountPage(userId, role);
     });
 }

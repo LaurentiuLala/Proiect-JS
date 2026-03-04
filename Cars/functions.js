@@ -1,8 +1,12 @@
-import { getAllCars, getAllLocations } from "../Home/service.js";
+import { getAllCars } from "./service.js";
+import { getAllLocations } from "../Locatii/service.js";
 import { createRentalPage } from "../Rental/functions.js";
 import { createAccountPage } from "../Account/functions.js";
 import { createHomePage } from "../Home/functions.js";
 import { createClientReviewPage } from "../Review/functions.js";
+import { handleLogout } from "../Logout/functions.js";
+import { createAboutPage } from "../About/functions.js";
+import { createContactPage } from "../Contact/functions.js";
 
 export async function createCarsPage(userId,role) {
     console.log(role);
@@ -13,13 +17,14 @@ export async function createCarsPage(userId,role) {
             <h1>Cars</h1>
             <div class="navigation-container">
                 <a href="#" class ="home-link"><p>Home</p></a>
-                <a href="#"><p>About</p></a>
-                <a href="#"><p>Contact</p></a>
+                <a href="#" class="about-link"><p>About</p></a>
+                <a href="#" class="contact-link"><p>Contact</p></a>
                 <a href="#" class="cars-link"><p>Cars</p></a>
                 <a href="#" class = "review-link"><p>Reviews</p></a>
             </div>
             <div class="navigation-container-icons">
-                <a href="#" class="user-icon"><i class="fa-regular fa-user"></i></a>
+                <a href="#" class="user-icon" title="Account"><i class="fa-regular fa-user"></i></a>
+                <a href="#" class="logout-icon" title="Logout"><i class="fa-solid fa-right-from-bracket"></i></a>
             </div>
         </div>
 
@@ -43,7 +48,10 @@ export async function createCarsPage(userId,role) {
     `;
 
     document.querySelector('.user-icon').addEventListener("click", () => {createAccountPage(userId,role); });
+    document.querySelector('.logout-icon').addEventListener("click", () => handleLogout());
     container.querySelector(".home-link").addEventListener("click", () => createHomePage(userId,role));
+    container.querySelector(".about-link").addEventListener("click", () => createAboutPage(userId, role));
+    container.querySelector(".contact-link").addEventListener("click", () => createContactPage(userId, role));
     container.querySelector(".cars-link").addEventListener("click", () => createCarsPage(userId,role));
     container.querySelector(".review-link").addEventListener("click", () => createClientReviewPage(userId,role));
 
@@ -102,7 +110,7 @@ function createCarCard(car, userId, role) {
     const div = document.createElement("div");
     div.classList.add("product-card");
 
-    const isAvailable = car.disponibil;
+    const isAvailable = car.cantitate > 0;
 
     div.innerHTML = `
         <img src="assets/imgs/test.jpg" alt="Imagine mașină">
