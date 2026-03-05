@@ -15,3 +15,7 @@ export async function getAllRentals() {
 export async function deleteRental(rentalId) {
     return await apiFetch(`/inchirieri/${rentalId}`, "DELETE");
 }
+
+export async function updateRentalStatus(code, status) {
+    return await apiFetch(`/inchirieri/status/${code}?status=${status}`, "PATCH");
+}

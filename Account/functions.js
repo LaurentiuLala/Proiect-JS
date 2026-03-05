@@ -126,11 +126,14 @@ export async function createAccountPage(userId,role) {
                     const rentalDiv = document.createElement("div");
                     rentalDiv.className = "rental-card";
                     rentalDiv.innerHTML = `
-                        <p><b>Car:</b> ${masina.model} (${masina.marca})</p>
+                        <div class="rental-header">
+                            <p><b>Car:</b> ${masina.model} (${masina.marca})</p>
+                            <span class="status-badge status-${rental.status.toLowerCase()}">${rental.status}</span>
+                        </div>
+                        <p><b>Code:</b> <span class="rental-code">${rental.code}</span></p>
                         <p><b>From:</b> ${rental.dataInceput}</p>
                         <p><b>To:</b> ${rental.dataSfarsit}</p>
                         <button class="delete-rental-btn" data-id="${rental.id}">Delete</button>
-                        <hr/>
                     `;
                     rightSide.appendChild(rentalDiv);
 

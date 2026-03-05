@@ -8,6 +8,10 @@ export async function createLocation(locationDTO) {
     return await apiFetch("/locatii", "POST", locationDTO);
 }
 
+export async function updateLocation(locationId, locationDTO) {
+    return await apiFetch(`/locatii/${locationId}`, "PUT", locationDTO);
+}
+
 export async function deleteLocation(locationId) {
     return await apiFetch(`/locatii/${locationId}`, "DELETE");
 }

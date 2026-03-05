@@ -38,3 +38,26 @@ export async function apiFetch(path, method = "GET", body = null) {
         };
     }
 }
+
+export async function formDataFetch(path, method = "POST", formData = null) {
+    const headers = {};
+
+    const auth = localStorage.getItem("auth");
+    if (auth) {
+        headers['Authorization'] = `Basic ${auth}`;
+    }
+
+    const options = {
+        method,
+        headers,
+        body: formData
+    };
+
+    const response = await fetch(`${BASE_URL}${path}`, options);
+    
+    if (response.status >= 200 && response.status < 300) {
+        return { status: response.status };
+    } else {
+        return { status: response.status, body: await response.text() };
+    }
+}

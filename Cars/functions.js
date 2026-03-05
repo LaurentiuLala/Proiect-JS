@@ -111,9 +111,21 @@ function createCarCard(car, userId, role) {
     div.classList.add("product-card");
 
     const isAvailable = car.cantitate > 0;
+    const hasImages = car.images && car.images.length > 0;
+    let currentImageIndex = 0;
 
     div.innerHTML = `
-        <img src="assets/imgs/test.jpg" alt="Imagine mașină">
+        <div class="image-slider">
+            ${hasImages 
+                ? `<img src="http://localhost:8080${car.images[0]}" alt="${car.marca} ${car.model}" class="slider-img">
+                   ${car.images.length > 1 ? `
+                   <button class="slider-btn prev-btn"><i class="fa-solid fa-chevron-left"></i></button>
+                   <button class="slider-btn next-btn"><i class="fa-solid fa-chevron-right"></i></button>
+                   <div class="slider-dots"></div>
+                   ` : ''}`
+                : `<img src="assets/imgs/test.jpg" alt="Imagine mașină" class="slider-img">`
+            }
+        </div>
         <p><strong>${car.marca} ${car.model}</strong></p>
         <p class="description">An fabricație: ${car.anFabricatie}</p>
         <p class="description">Locație: ${car.locatieDescriere}</p>
@@ -123,6 +135,39 @@ function createCarCard(car, userId, role) {
             : `<p style="color: red; font-weight: bold;">Not Available</p>`
         }
     `;
+
+    if (hasImages && car.images.length > 1) {
+        const imgElement = div.querySelector(".slider-img");
+        const nextBtn = div.querySelector(".next-btn");
+        const prevBtn = div.querySelector(".prev-btn");
+        const dotsContainer = div.querySelector(".slider-dots");
+
+        // Create dots
+        car.images.forEach((_, idx) => {
+            const dot = document.createElement("span");
+            dot.className = `dot ${idx === 0 ? 'active' : ''}`;
+            dotsContainer.appendChild(dot);
+        });
+
+        const updateSlider = () => {
+            imgElement.src = `http://localhost:8080${car.images[currentImageIndex]}`;
+            div.querySelectorAll(".dot").forEach((dot, idx) => {
+                dot.className = `dot ${idx === currentImageIndex ? 'active' : ''}`;
+            });
+        };
+
+        nextBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            currentImageIndex = (currentImageIndex + 1) % car.images.length;
+            updateSlider();
+        });
+
+        prevBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            currentImageIndex = (currentImageIndex - 1 + car.images.length) % car.images.length;
+            updateSlider();
+        });
+    }
 
     if (isAvailable) {
         div.querySelector(".rent-now-btn").addEventListener("click", () => {

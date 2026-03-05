@@ -64,7 +64,13 @@ export async function createRentalPage(userId, initialCarId = null, role) {
             <label>From: <input type="date" id="start-date" min="${today}" required></label><br>
             <label>To: <input type="date" id="end-date" min="${today}" required></label><br>
 
-            <button type="submit">Confirm Rental</button>
+            <div id="price-calculator" style="margin-top: 20px; padding: 15px; background: #f1f2f6; border-radius: 8px; border-left: 5px solid #2e86de;">
+                <p><b>Price per day:</b> <span id="price-per-day">0</span> Lei</p>
+                <p><b>Total days:</b> <span id="total-days">0</span></p>
+                <p style="font-size: 1.2rem; color: #2e86de;"><b>Total Price: <span id="total-price">0</span> Lei</b></p>
+            </div>
+
+            <button type="submit" style="margin-top: 20px;">Confirm Rental</button>
         </form>
 
         <button id="back-to-account">Back to Account</button>
@@ -169,4 +175,66 @@ export async function createRentalPage(userId, initialCarId = null, role) {
     document.getElementById("back-to-account").addEventListener("click", () => {
         createAccountPage(userId, role);
     });
+
+    // PRICE CALCULATOR LOGIC
+    const startDateInput = document.getElementById("start-date");
+    const endDateInput = document.getElementById("end-date");
+    const pricePerDaySpan = document.getElementById("price-per-day");
+    const totalDaysSpan = document.getElementById("total-days");
+    const totalPriceSpan = document.getElementById("total-price");
+
+    let currentCarPrice = 0;
+
+    const calculateTotalPrice = () => {
+        const start = startDateInput.value;
+        const end = endDateInput.value;
+
+        if (start && end && currentCarPrice > 0) {
+            const date1 = new Date(start);
+            const date2 = new Date(end);
+
+            // Difference in time
+            const diffTime = date2 - date1;
+            // Difference in days (1 day minimum)
+            let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+
+            if (diffDays < 1) diffDays = 0;
+
+            totalDaysSpan.textContent = diffDays;
+            totalPriceSpan.textContent = (diffDays * currentCarPrice).toFixed(2);
+        } else {
+            totalDaysSpan.textContent = "0";
+            totalPriceSpan.textContent = "0";
+        }
+    };
+
+    const updatePricePerDay = async () => {
+        const carId = carSelect.value;
+        if (carId) {
+            try {
+                const response = await getCarById(carId);
+                if (response.status === 200) {
+                    currentCarPrice = response.body.pretPeZi;
+                    pricePerDaySpan.textContent = currentCarPrice;
+                    calculateTotalPrice();
+                }
+            } catch (error) {
+                console.error("Error fetching car price:", error);
+            }
+        } else {
+            currentCarPrice = 0;
+            pricePerDaySpan.textContent = "0";
+            calculateTotalPrice();
+        }
+    };
+
+    carSelect.addEventListener("change", updatePricePerDay);
+    startDateInput.addEventListener("change", calculateTotalPrice);
+    endDateInput.addEventListener("change", calculateTotalPrice);
+
+    // If initial car is set, update price
+    if (initialCarId) {
+        // We need to wait for the dropdown to be populated
+        setTimeout(updatePricePerDay, 1000); 
+    }
 }

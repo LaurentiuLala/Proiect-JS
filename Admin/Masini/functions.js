@@ -1,4 +1,4 @@
-import { createCar, getAllCars, deleteCar } from "../../Cars/service.js";
+import { createCar, getAllCars, deleteCar, uploadCarImages, updateCar, deleteCarImages } from "../../Cars/service.js";
 import { getAllLocations } from "../../Locatii/service.js";
 import { createAdminPage } from "../functions.js";
 
@@ -17,6 +17,10 @@ export async function createMasinaPage(userId,role) {
                 <select id="locatieId" required>
                     <option value="">Selectează locația</option>
                 </select>
+                <div class="file-upload-section">
+                    <p>Încarcă Imagini (multiple):</p>
+                    <input type="file" id="car-images" multiple accept="image/*">
+                </div>
                 <button type="submit">Adaugă</button>
             </form>
             <h2>Toate Mașinile</h2>
@@ -53,8 +57,18 @@ if (locatiiResponse.status === 200) {
             locatieId: document.getElementById("locatieId").value
         };
 
-        await createCar(car);
-        createMasinaPage(userId,role);
+        const response = await createCar(car);
+        if (response.status === 200) {
+            const createdCar = response.body;
+            const imageFiles = document.getElementById("car-images").files;
+            if (imageFiles.length > 0) {
+                await uploadCarImages(createdCar.id, imageFiles);
+            }
+            alert("Mașină adăugată cu succes!");
+            createMasinaPage(userId,role);
+        } else {
+            alert("Eroare la adăugarea mașinii.");
+        }
     });
 
     const response = await getAllCars();
@@ -63,18 +77,105 @@ if (locatiiResponse.status === 200) {
         response.body.forEach(m => {
             const item = document.createElement("li");
             item.innerHTML = `
-                ${m.marca} ${m.model} (${m.anFabricatie}) - ${m.pretPeZi} Lei - Cantitate: ${m.cantitate}
-                <button class="delete-btn" data-id="${m.id}">Șterge</button>
+                <div class="car-admin-info">
+                    <strong>${m.marca} ${m.model}</strong> (${m.anFabricatie}) - ${m.pretPeZi} Lei - Cantitate: ${m.cantitate}
+                </div>
+                <div class="car-admin-actions">
+                    <button class="edit-btn" data-id="${m.id}">Editează</button>
+                    <button class="delete-btn" data-id="${m.id}">Șterge</button>
+                </div>
             `;
+            item.querySelector(".edit-btn").addEventListener("click", () => {
+                openEditModal(m, userId, role);
+            });
             item.querySelector(".delete-btn").addEventListener("click", async () => {
-                await deleteCar(m.id);
-                createMasinaPage(userId,role);
+                if (confirm("Sigur doriți să ștergeți această mașină?")) {
+                    await deleteCar(m.id);
+                    createMasinaPage(userId, role);
+                }
             });
             list.appendChild(item);
         });
     }
 
     document.getElementById("MainPage").addEventListener("click", () => {
-        createAdminPage(userId,role);
+        createAdminPage(userId, role);
     });
+}
+
+async function openEditModal(car, userId, role) {
+    const modal = document.createElement("div");
+    modal.className = "modal";
+    const locatiiResponse = await getAllLocations();
+    const locatii = locatiiResponse.body || [];
+
+    modal.innerHTML = `
+        <div class="modal-content admin-subpage">
+            <h2>Editează Mașina #${car.id}</h2>
+            <form id="edit-car-form">
+                <label>Marca:</label>
+                <input type="text" id="edit-marca" value="${car.marca}" required>
+                <label>Model:</label>
+                <input type="text" id="edit-model" value="${car.model}" required>
+                <label>An Fabricație:</label>
+                <input type="number" id="edit-anFabricatie" value="${car.anFabricatie}" required>
+                <label>Preț pe zi:</label>
+                <input type="number" id="edit-pretPeZi" value="${car.pretPeZi}" required>
+                <label>Cantitate:</label>
+                <input type="number" id="edit-cantitate" value="${car.cantitate}" required>
+                <label>Locație:</label>
+                <select id="edit-locatieId" required>
+                    ${locatii.map(l => `<option value="${l.id}" ${l.id === car.locatieId ? 'selected' : ''}>${l.oras}, ${l.strada} ${l.numar}</option>`).join('')}
+                </select>
+                <div class="file-upload-section">
+                    <p>Adaugă Imagini Noi (va păstra și pe cele vechi):</p>
+                    <input type="file" id="edit-car-images" multiple accept="image/*">
+                    <button type="button" id="clear-images-btn" class="delete-btn" style="margin-top: 10px; width: auto;">Șterge Toate Imaginile Vechi</button>
+                </div>
+                <div class="modal-buttons">
+                    <button type="submit" class="save-changes-button">Salvează Modificările</button>
+                    <button type="button" id="close-modal" class="delete-btn">Anulează</button>
+                </div>
+            </form>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    document.getElementById("close-modal").onclick = () => {
+        document.body.removeChild(modal);
+    };
+
+    document.getElementById("clear-images-btn").onclick = async () => {
+        if (confirm("Sigur doriți să ștergeți TOATE imaginile acestei mașini?")) {
+            await deleteCarImages(car.id);
+            alert("Imagini șterse!");
+        }
+    };
+
+    document.getElementById("edit-car-form").onsubmit = async (e) => {
+        e.preventDefault();
+        const updatedCar = {
+            marca: document.getElementById("edit-marca").value,
+            model: document.getElementById("edit-model").value,
+            anFabricatie: document.getElementById("edit-anFabricatie").value,
+            pretPeZi: document.getElementById("edit-pretPeZi").value,
+            cantitate: document.getElementById("edit-cantitate").value,
+            disponibil: document.getElementById("edit-cantitate").value > 0,
+            locatieId: document.getElementById("edit-locatieId").value
+        };
+
+        const response = await updateCar(car.id, updatedCar);
+        if (response.status === 200) {
+            const imageFiles = document.getElementById("edit-car-images").files;
+            if (imageFiles.length > 0) {
+                await uploadCarImages(car.id, imageFiles);
+            }
+            alert("Mașină actualizată cu succes!");
+            document.body.removeChild(modal);
+            createMasinaPage(userId, role);
+        } else {
+            alert("Eroare la actualizarea mașinii.");
+        }
+    };
 }

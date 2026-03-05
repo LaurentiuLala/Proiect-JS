@@ -1,4 +1,4 @@
-import { apiFetch } from "../Core/service.js";
+import { apiFetch, formDataFetch } from "../Core/service.js";
 
 export async function getAllCars() {
     return await apiFetch("/masini", "GET");
@@ -14,6 +14,22 @@ export async function getCarsByLocation(locatieId) {
 
 export async function createCar(carDTO) {
     return await apiFetch("/masini", "POST", carDTO);
+}
+
+export async function updateCar(carId, carDTO) {
+    return await apiFetch(`/masini/${carId}`, "PUT", carDTO);
+}
+
+export async function uploadCarImages(carId, files) {
+    const formData = new FormData();
+    for (let i = 0; i < files.length; i++) {
+        formData.append("files", files[i]);
+    }
+    return await formDataFetch(`/masini/${carId}/images`, "POST", formData);
+}
+
+export async function deleteCarImages(carId) {
+    return await apiFetch(`/masini/${carId}/images`, "DELETE");
 }
 
 export async function deleteCar(carId) {
