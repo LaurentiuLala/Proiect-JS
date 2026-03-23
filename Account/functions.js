@@ -55,18 +55,18 @@ export async function createAccountPage(userId,role) {
         <hr width="100%"/>
         <div class="footer-section">
             <div class="address-section">
-                <h4>RentApp.</h4>
+                <h4>RentApp</h4>
                 <p class="description">Your mobility partner.</p>
             </div>
             <div class="links-section">
-                <a href="#"><p>Home</p></a>
-                <a href="#"><p>About</p></a>
-                <a href="#"><p>Contact</p></a>
+                <a href="#">Home</a>
+                <a href="#">About</a>
+                <a href="#">Contact</a>
             </div>
         </div>
         <hr width="80%"/>
         <div class="end-section">
-            <p>2025 RentApp. All rights reserved.</p>
+            <p>&copy; 2025 RentApp. All rights reserved.</p>
         </div>
     </div>
     `;

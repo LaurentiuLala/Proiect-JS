@@ -24,18 +24,18 @@ export function createAboutPage(userId, role) {
             </div>
         </div>
 
-        <div class="about-page" style="padding: 50px; text-align: center;">
+        <div class="about-page" style="text-align: center;">
             <h1>About Us</h1>
-            <p style="max-width: 800px; margin: 20px auto; line-height: 1.6;">
-                Welcome to RentApp, your premier destination for car rentals. We offer a wide range of high-quality vehicles 
+            <p style="max-width: 700px; margin: 0 auto 24px; color: var(--text-secondary); font-size: 16px; line-height: 1.8;">
+                Welcome to RentApp, your premier destination for car rentals. We offer a wide range of high-quality vehicles
                 to suit all your travel needs, from compact cars for city trips to spacious SUVs for family vacations.
             </p>
-            <p style="max-width: 800px; margin: 20px auto; line-height: 1.6;">
-                Founded in 2025, our mission is to provide a fast, easy, and convenient car rental experience. 
+            <p style="max-width: 700px; margin: 0 auto 40px; color: var(--text-secondary); font-size: 16px; line-height: 1.8;">
+                Founded in 2025, our mission is to provide a fast, easy, and convenient car rental experience.
                 With multiple locations across the country, we are always near you when you need a ride.
             </p>
-            <div style="margin-top: 50px;">
-                <img src="assets/imgs/test.jpg" alt="Our Fleet" style="width: 100%; max-width: 600px; border-radius: 10px;">
+            <div style="margin-top: 20px;">
+                <img src="assets/imgs/test.jpg" alt="Our Fleet" style="width: 100%; max-width: 640px; border-radius: var(--radius-lg); box-shadow: var(--shadow-lg);">
             </div>
         </div>
     `;

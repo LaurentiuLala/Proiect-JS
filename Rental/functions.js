@@ -64,10 +64,10 @@ export async function createRentalPage(userId, initialCarId = null, role) {
             <label>From: <input type="date" id="start-date" min="${today}" required></label><br>
             <label>To: <input type="date" id="end-date" min="${today}" required></label><br>
 
-            <div id="price-calculator" style="margin-top: 20px; padding: 15px; background: #f1f2f6; border-radius: 8px; border-left: 5px solid #2e86de;">
+            <div id="price-calculator">
                 <p><b>Price per day:</b> <span id="price-per-day">0</span> Lei</p>
                 <p><b>Total days:</b> <span id="total-days">0</span></p>
-                <p style="font-size: 1.2rem; color: #2e86de;"><b>Total Price: <span id="total-price">0</span> Lei</b></p>
+                <p style="font-size: 1.15rem; color: var(--primary); font-weight: 700;"><b>Total Price: <span id="total-price">0</span> Lei</b></p>
             </div>
 
             <button type="submit" style="margin-top: 20px;">Confirm Rental</button>
