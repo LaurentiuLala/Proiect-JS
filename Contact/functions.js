@@ -24,19 +24,19 @@ export function createContactPage(userId, role) {
             </div>
         </div>
 
-        <div class="contact-page" style="padding: 50px; text-align: center;">
+        <div class="contact-page" style="text-align: center;">
             <h1>Contact Us</h1>
-            <div style="max-width: 600px; margin: 30px auto; text-align: left; background: #f9f9f9; padding: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-                <p><strong>Email:</strong> support@rentapp.ro</p>
-                <p><strong>Phone:</strong> +40 700 000 000</p>
-                <p><strong>Address:</strong> 123 Main Street, City Center, Romania</p>
-                <hr style="margin: 20px 0;">
-                <h3>Send us a message</h3>
+            <div style="max-width: 580px; margin: 0 auto; text-align: left; background: var(--bg); padding: 32px; border-radius: var(--radius-lg); border: 1px solid var(--border);">
+                <p style="margin-bottom: 8px; color: var(--text-secondary);"><strong>Email:</strong> support@rentapp.ro</p>
+                <p style="margin-bottom: 8px; color: var(--text-secondary);"><strong>Phone:</strong> +40 700 000 000</p>
+                <p style="margin-bottom: 8px; color: var(--text-secondary);"><strong>Address:</strong> 123 Main Street, City Center, Romania</p>
+                <hr>
+                <h3 style="margin-bottom: 20px; color: var(--secondary); font-weight: 700;">Send us a message</h3>
                 <form id="contact-form">
-                    <input type="text" placeholder="Your Name" style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px;">
-                    <input type="email" placeholder="Your Email" style="width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 5px;">
-                    <textarea placeholder="Message" style="width: 100%; padding: 10px; margin-bottom: 10px; height: 100px; border: 1px solid #ccc; border-radius: 5px;"></textarea>
-                    <button type="submit" style="background: #333; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Send Message</button>
+                    <input type="text" placeholder="Your Name" style="margin-bottom: 14px;">
+                    <input type="email" placeholder="Your Email" style="margin-bottom: 14px;">
+                    <textarea placeholder="Your message..." style="height: 120px; margin-bottom: 14px; resize: vertical;"></textarea>
+                    <button type="submit" class="rent-now-btn" style="border-radius: var(--radius-sm);">Send Message</button>
                 </form>
             </div>
         </div>

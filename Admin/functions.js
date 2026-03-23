@@ -18,13 +18,15 @@ export function createAdminPage(userId, role) {
         </div>
         <div class="admin-page">
             <h1>Admin Dashboard</h1>
+            <p>Manage your fleet, users, and rentals</p>
             <div class="admin-buttons">
-                <button class="admin-btn" id="add-car">Adaugă Mașină</button>
-                <button class="admin-btn" id="manage-users">Utilizatori</button>
-                <button class="admin-btn" id="add-location">Adaugă Locație</button>
-                <button class="admin-btn" id="view-rentals">Vezi Închirieri</button>
-                <button class="admin-btn" id="btnReview">Review-uri</button>
-                <button class="admin-btn" id="btnLoguri">Loguri</button> 
+                <button class="admin-btn" id="add-car"><i class="fa-solid fa-car" style="margin-right: 8px;"></i>Cars</button>
+                <button class="admin-btn" id="manage-users"><i class="fa-solid fa-users" style="margin-right: 8px;"></i>Users</button>
+                <button class="admin-btn" id="add-location"><i class="fa-solid fa-location-dot" style="margin-right: 8px;"></i>Locations</button>
+                <button class="admin-btn" id="view-rentals"><i class="fa-solid fa-key" style="margin-right: 8px;"></i>Rentals</button>
+                <button class="admin-btn" id="btnReview"><i class="fa-solid fa-star" style="margin-right: 8px;"></i>Reviews</button>
+                <button class="admin-btn" id="btnLoguri"><i class="fa-solid fa-clock-rotate-left" style="margin-right: 8px;"></i>Logs</button>
+            </div>
         </div>
     `;
 

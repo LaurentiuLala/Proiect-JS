@@ -42,9 +42,9 @@ export async function createHomePage(userId, role) {
 
 <div class="aside-container">
     <div class="content-container">
-        <p class="line-space">Discover Deals</p>
-        <h2>Book Your Next Ride</h2>
-        <p>Fast, easy, and convenient. Explore our collection of premium vehicles for your next trip.</p>
+        <p class="line-space">Premium Car Rental</p>
+        <h2>Drive your dream<br>car today</h2>
+        <p>Browse our curated collection of premium vehicles. Simple booking, competitive prices, unforgettable rides.</p>
     </div>
 </div>
 
@@ -69,24 +69,24 @@ export async function createHomePage(userId, role) {
     <div class="footer-section">
         <div class="address-section">
             <h4>RentApp</h4>
-            <p class="description">123 Main Street, City Center <br> Romania</p>
+            <p class="description">123 Main Street, City Center<br>Romania</p>
         </div>
         <div class="links-section">
-            <a href="#"><p>Home</p></a>
-            <a href="#"><p>Cars</p></a>
-            <a href="#"><p>About</p></a>
-            <a href="#"><p>Contact</p></a>
+            <a href="#">Home</a>
+            <a href="#">Cars</a>
+            <a href="#">About</a>
+            <a href="#">Contact</a>
         </div>
         <div class="help-section">
-            <p class="description">Help</p>
-            <a href="#"><p>FAQ</p></a>
-            <a href="#"><p>Terms</p></a>
-            <a href="#"><p>Privacy</p></a>
+            <h4>Support</h4>
+            <a href="#">FAQ</a>
+            <a href="#">Terms</a>
+            <a href="#">Privacy</a>
         </div>
     </div>
     <hr width="80%"/>
     <div class="end-section">
-        <p>2025 RentApp. All rights reserved.</p>
+        <p>&copy; 2025 RentApp. All rights reserved.</p>
     </div>
 </div>
     `;

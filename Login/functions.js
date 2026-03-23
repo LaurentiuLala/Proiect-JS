@@ -10,26 +10,27 @@ export function createLoginPage(){
     container.innerHTML = `
 
 <div class="login-page">
-    
+
     <div>
         <div class="login-container">
-            <h1>Log in</h1>
+            <h1>Welcome back</h1>
+            <p class="subtitle">Sign in to your RentApp account</p>
             <div class="email-input">
-                <p>Email:</p>
-                <input type="email" name="email" id="email-login" placeholder="Your email here">
+                <p>Email</p>
+                <input type="email" name="email" id="email-login" placeholder="Enter your email">
             </div>
             <div class="password-input">
-                <p>Password:</p>
-                <input type="password" name="password" id="password-login" placeholder="Your password here">
+                <p>Password</p>
+                <input type="password" name="password" id="password-login" placeholder="Enter your password">
             </div>
-            <p>Don't have an account? <a href="#" class="register-link">Register here</a></p>
-            <button class="login-button">Log in</button>
+            <button class="login-button">Sign in</button>
+            <p>Don't have an account? <a href="#" class="register-link">Create one</a></p>
         </div>
     </div>
 
 
 </div>
-    
+
     `;
 
 
@@ -98,27 +99,26 @@ export function createRegisterPage(){
     <div>
 
         <div class="register-container">
-            <h1>Register</h1>
-            <div class="email-input">
-                <p>Email:</p>
-                <input type="email" name="email" id="email-register" placeholder="Your email here">
-            </div>
-            <div class="password-input">
-                <p>Password:</p>
-                <input type="password" name="password" id="password-register" placeholder="Your password here">
-            </div>
+            <h1>Create account</h1>
+            <p class="subtitle">Join RentApp and start booking</p>
             <div class="name-input">
-             <p>Name:</p>
-             <input type="text" name="name" id="name-register" placeholder="Your name here">
+                <p>First Name</p>
+                <input type="text" name="name" id="name-register" placeholder="Enter your first name">
             </div>
             <div class="lastname-input">
-            <p>LastName:</p>
-            <input type="text" name="lastName" id="lastname-register" placeholder="Your last name here">
-</div>
-
-  
-            <p>Already have an account? <a href="#" class="login-link">Log in here</a></p>
-            <button class="register-button">Register</button>
+                <p>Last Name</p>
+                <input type="text" name="lastName" id="lastname-register" placeholder="Enter your last name">
+            </div>
+            <div class="email-input">
+                <p>Email</p>
+                <input type="email" name="email" id="email-register" placeholder="Enter your email">
+            </div>
+            <div class="password-input">
+                <p>Password</p>
+                <input type="password" name="password" id="password-register" placeholder="Create a password">
+            </div>
+            <button class="register-button">Create account</button>
+            <p>Already have an account? <a href="#" class="login-link">Sign in</a></p>
         </div>
 
     </div>
